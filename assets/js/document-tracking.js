@@ -1,58 +1,28 @@
 /**
  * Document Tracking System for FSTI
  * This script handles the document tracking functionality for both students and staff
+ * Using a dynamic approach that adapts to the actual spreadsheet structure
  */
 
 // Temporary solution: For demo purposes only - In a real application, you would use the Apps Script Web App URL
 const DEMO_MODE = true;
 
 // Google Apps Script deployed web app URL - Replace this with your actual deployed script URL
-const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxydg4kMZRemBX64o_NvNJw1pJeTzqiVv4TIEabnVUSSmisPJVq04_1tSSwOnEr5vwX/exec';
 
-// Document type mapping
+// Document type basic info (no column definitions)
 const DOC_TYPES = {
-    'surat_tugas': {
-        name: 'Permohonan Surat Tugas',
-        sheet: 'Permohonan Surat Tugas',
-        columns: [
-            { id: 'timestamp', name: 'Waktu Pengajuan', width: '120px' },
-            { id: 'nama', name: 'Nama Lengkap', width: '180px' },
-            { id: 'nip', name: 'NIP', width: '120px' },
-            { id: 'status', name: 'Status', width: '100px' },
-            { id: 'judul_kegiatan', name: 'Judul Kegiatan', width: '200px' },
-            { id: 'tanggal_pelaksanaan', name: 'Tanggal Pelaksanaan', width: '120px' },
-            { id: 'lokasi', name: 'Lokasi', width: '120px' },
-            { id: 'action', name: 'Aksi', width: '80px' }
-        ]
-    },
     'ttd_dekanat': {
         name: 'Pengesahan TTD Dekan',
-        sheet: 'Pengesahan TTD Dekanat',
-        columns: [
-            { id: 'timestamp', name: 'Waktu Pengajuan', width: '120px' },
-            { id: 'nama', name: 'Nama Lengkap', width: '180px' },
-            { id: 'nip', name: 'NIP', width: '120px' },
-            { id: 'status', name: 'Status', width: '100px' },
-            { id: 'judul_dokumen', name: 'Judul Dokumen', width: '200px' },
-            { id: 'jenis_dokumen', name: 'Jenis Dokumen', width: '120px' },
-            { id: 'tujuan', name: 'Tujuan', width: '120px' },
-            { id: 'action', name: 'Aksi', width: '80px' }
-        ]
+        sheet: 'Pengesahan TTD Dekanat'
+    },
+    'surat_tugas': {
+        name: 'Permohonan Surat Tugas',
+        sheet: 'Permohonan Surat Tugas'
     },
     'peminjaman_sarpras': {
         name: 'Peminjaman Sarana Prasarana',
-        sheet: 'Peminjaman Sarpras',
-        columns: [
-            { id: 'timestamp', name: 'Waktu Pengajuan', width: '120px' },
-            { id: 'nama', name: 'Nama Lengkap', width: '180px' },
-            { id: 'nip', name: 'NIP', width: '120px' },
-            { id: 'status', name: 'Status', width: '100px' },
-            { id: 'jenis_sarpras', name: 'Jenis Sarpras', width: '120px' },
-            { id: 'nama_sarpras', name: 'Nama Sarpras', width: '120px' },
-            { id: 'tanggal_pinjam', name: 'Tanggal Pinjam', width: '120px' },
-            { id: 'tanggal_kembali', name: 'Tanggal Kembali', width: '120px' },
-            { id: 'action', name: 'Aksi', width: '80px' }
-        ]
+        sheet: 'Peminjaman Sarpras'
     }
 };
 
@@ -66,6 +36,15 @@ const STATUS_COLORS = {
     'Ditolak': 'danger',
     'Pending': 'secondary'
 };
+
+// Status field names that might be used in different sheets
+const STATUS_FIELD_NAMES = ['status', 'status_persetujuan', 'status_progress'];
+
+// Date field patterns to identify date columns
+const DATE_FIELD_PATTERNS = ['timestamp', 'tanggal', 'date'];
+
+// Fields to exclude from the table view for better UI
+const EXCLUDED_TABLE_FIELDS = ['keterangan', 'file_dokumen_ttd', 'file_dokumen_sah', 'dokumen_pendukung'];
 
 // Initialize document tracking system
 document.addEventListener('DOMContentLoaded', function() {
@@ -193,22 +172,43 @@ function generateMockData(docType, idFilter = '') {
     
     // Common staff data
     const staff = [
-        { nama: 'Adi Mahmud Jaya Marindra', nip: '199012312019031001' },
-        { nama: 'Irma Fitria', nip: '199104142019032021' },
-        { nama: 'Yun Tonce Kusuma Priyanto', nip: '198810302015041001' },
-        { nama: 'Swastya Rahastama', nip: '199205162019031011' },
-        { nama: 'M. Ihsan Alfani Putera', nip: '199309212019031011' },
-        { nama: 'Desy Ridho Rahayu', nip: '199512172020122021' }
+        { nama: 'Adi Mahmud Jaya Marindra', nip_nipppk_niph: '199012312019031001', jurusan: 'Teknik Elektro, Informatika, dan Bisnis', program_studi: 'Teknik Elektro' },
+        { nama: 'Irma Fitria', nip_nipppk_niph: '199104142019032021', jurusan: 'Sains dan Analitika Data', program_studi: 'Fisika' },
+        { nama: 'Yun Tonce Kusuma Priyanto', nip_nipppk_niph: '198810302015041001', jurusan: 'Teknik Elektro, Informatika, dan Bisnis', program_studi: 'Informatika' },
+        { nama: 'Swastya Rahastama', nip_nipppk_niph: '199205162019031011', jurusan: 'Sains dan Analitika Data', program_studi: 'Matematika' },
+        { nama: 'M. Ihsan Alfani Putera', nip_nipppk_niph: '199309212019031011', jurusan: 'Teknik Elektro, Informatika, dan Bisnis', program_studi: 'Sistem Informasi' },
+        { nama: 'Desy Ridho Rahayu', nip_nipppk_niph: '199512172020122021', jurusan: 'Teknik Elektro, Informatika, dan Bisnis', program_studi: 'Teknik Elektro' }
     ];
     
     // Filter staff by NIP if idFilter is provided
     let filteredStaff = staff;
     if (idFilter) {
-        filteredStaff = staff.filter(s => s.nip.includes(idFilter));
+        filteredStaff = staff.filter(s => s.nip_nipppk_niph.includes(idFilter));
     }
     
     // Generate data based on document type
     if (docType === 'surat_tugas') {
+        // Define fields for surat_tugas
+        const mockFields = {
+            timestamp: 'date',
+            nama: 'string',
+            nip_nipppk_niph: 'string',
+            jurusan: 'string',
+            program_studi: 'string',
+            nama_kegiatan: 'string',
+            penyelenggara_kegiatan: 'string',
+            nomor_surat_undangan: 'string',
+            tanggal_surat_undangan: 'date',
+            tanggal_pelaksanaan_kegiatan: 'date',
+            tanggal_surat_tugas: 'date',
+            alamat_venue: 'string',
+            kota_kab_kegiatan: 'string',
+            kehadiran_sebagai: 'string',
+            dokumen_pendukung: 'string',
+            status_progress: 'string',
+            keterangan: 'string'
+        };
+        
         const kegiatan = [
             'Seminar Nasional Teknologi Informasi',
             'Workshop Artificial Intelligence',
@@ -217,36 +217,82 @@ function generateMockData(docType, idFilter = '') {
             'Kunjungan Industri'
         ];
         
-        const lokasi = ['Balikpapan', 'Jakarta', 'Surabaya', 'Bandung', 'Online'];
+        const penyelenggara = [
+            'Universitas Indonesia',
+            'Institut Teknologi Bandung',
+            'Kementerian Pendidikan dan Kebudayaan',
+            'IEEE Indonesia Section',
+            'Microsoft Indonesia'
+        ];
         
-        // Generate 1-5 random documents
-        const count = Math.min(Math.floor(Math.random() * 5) + 1, filteredStaff.length);
+        const kota = ['Balikpapan', 'Jakarta', 'Surabaya', 'Bandung', 'Online'];
+        const kehadiran = ['Peserta', 'Pemakalah', 'Pembicara', 'Moderator', 'Panitia'];
+        const status = ['Diajukan', 'Diproses', 'Ditinjau', 'Disetujui', 'Selesai'];
         
-        for (let i = 0; i < count; i++) {
-            // Generate random date in the last 30 days
-            const submitDate = new Date();
-            submitDate.setDate(submitDate.getDate() - Math.floor(Math.random() * 30));
+        // Generate documents
+        for (let i = 0; i < Math.min(3, filteredStaff.length); i++) {
+            const staff = filteredStaff[i % filteredStaff.length];
+            const doc = {};
             
-            // Generate random pelaksanaan date (1-14 days after submission)
-            const pelaksanaanDate = new Date(submitDate);
-            pelaksanaanDate.setDate(pelaksanaanDate.getDate() + Math.floor(Math.random() * 14) + 1);
-            
-            // Select random staff member
-            const staffMember = filteredStaff[i % filteredStaff.length];
-            
-            // Create document
-            mockData.push({
-                timestamp: submitDate.toISOString(),
-                nama: staffMember.nama,
-                nip: staffMember.nip,
-                status: getRandomStatus(),
-                judul_kegiatan: kegiatan[Math.floor(Math.random() * kegiatan.length)],
-                tanggal_pelaksanaan: pelaksanaanDate.toISOString(),
-                lokasi: lokasi[Math.floor(Math.random() * lokasi.length)],
-                keterangan: 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.'
+            // Create random document based on fields
+            Object.keys(mockFields).forEach(field => {
+                const fieldType = mockFields[field];
+                
+                if (fieldType === 'date') {
+                    // Generate a random date
+                    const date = new Date();
+                    date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+                    doc[field] = date.toISOString();
+                } else if (field === 'nama') {
+                    doc[field] = staff.nama;
+                } else if (field === 'nip_nipppk_niph') {
+                    doc[field] = staff.nip_nipppk_niph;
+                } else if (field === 'jurusan') {
+                    doc[field] = staff.jurusan;
+                } else if (field === 'program_studi') {
+                    doc[field] = staff.program_studi;
+                } else if (field === 'nama_kegiatan') {
+                    doc[field] = kegiatan[Math.floor(Math.random() * kegiatan.length)];
+                } else if (field === 'penyelenggara_kegiatan') {
+                    doc[field] = penyelenggara[Math.floor(Math.random() * penyelenggara.length)];
+                } else if (field === 'nomor_surat_undangan') {
+                    doc[field] = `${Math.floor(Math.random() * 1000)}/UN.ITK/${new Date().getFullYear()}`;
+                } else if (field === 'kota_kab_kegiatan') {
+                    doc[field] = kota[Math.floor(Math.random() * kota.length)];
+                } else if (field === 'kehadiran_sebagai') {
+                    doc[field] = kehadiran[Math.floor(Math.random() * kehadiran.length)];
+                } else if (field === 'status_progress') {
+                    doc[field] = status[Math.floor(Math.random() * status.length)];
+                } else if (field === 'alamat_venue') {
+                    doc[field] = `Gedung ${Math.floor(Math.random() * 10) + 1}, Lantai ${Math.floor(Math.random() * 5) + 1}`;
+                } else if (field === 'dokumen_pendukung') {
+                    doc[field] = 'https://example.com/dokumen_pendukung.pdf';
+                } else if (field === 'keterangan') {
+                    doc[field] = 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.';
+                } else {
+                    doc[field] = `Value for ${field}`;
+                }
             });
+            
+            mockData.push(doc);
         }
     } else if (docType === 'ttd_dekanat') {
+        // Define fields for ttd_dekanat
+        const mockFields = {
+            timestamp: 'date',
+            nama: 'string',
+            nip_nipppk_niph: 'string',
+            jurusan: 'string',
+            program_studi: 'string',
+            jenis_dokumen: 'string',
+            judul_kegiatan: 'string',
+            file_dokumen_ttd: 'string',
+            pimpinan_ttd: 'string',
+            status_persetujuan: 'string',
+            keterangan: 'string',
+            file_dokumen_sah: 'string'
+        };
+        
         const jenisDokumen = [
             'Surat Keputusan',
             'Surat Rekomendasi',
@@ -255,38 +301,85 @@ function generateMockData(docType, idFilter = '') {
             'Laporan Akhir'
         ];
         
-        const tujuan = [
-            'Kementerian Pendidikan',
-            'Rektor ITK',
-            'Kepala Laboratorium',
-            'Perusahaan Mitra',
-            'Internal Fakultas'
+        const judulKegiatan = [
+            'Pengesahan SK Kepanitiaan Dies Natalis',
+            'Pengesahan Surat Rekomendasi Beasiswa',
+            'Pengesahan Laporan Penggunaan Dana Penelitian',
+            'Pengesahan Dokumen Kerjasama Industri',
+            'Pengesahan SK Pembimbing Tugas Akhir'
         ];
         
-        // Generate 1-5 random documents
-        const count = Math.min(Math.floor(Math.random() * 5) + 1, filteredStaff.length);
+        const pimpinanTtd = [
+            'Dekan',
+            'Wakil Dekan Bidang Akademik dan Kemahasiswaan',
+            'Wakil Dekan Bidang Keuangan dan Umum',
+            'Ketua Jurusan',
+            'Koordinator Program Studi'
+        ];
         
-        for (let i = 0; i < count; i++) {
-            // Generate random date in the last 30 days
-            const submitDate = new Date();
-            submitDate.setDate(submitDate.getDate() - Math.floor(Math.random() * 30));
+        const status = ['Diajukan', 'Diproses', 'Ditinjau', 'Disetujui', 'Selesai'];
+        
+        // Generate documents
+        for (let i = 0; i < Math.min(3, filteredStaff.length); i++) {
+            const staff = filteredStaff[i % filteredStaff.length];
+            const doc = {};
             
-            // Select random staff member
-            const staffMember = filteredStaff[i % filteredStaff.length];
-            
-            // Create document
-            mockData.push({
-                timestamp: submitDate.toISOString(),
-                nama: staffMember.nama,
-                nip: staffMember.nip,
-                status: getRandomStatus(),
-                judul_dokumen: `${jenisDokumen[Math.floor(Math.random() * jenisDokumen.length)]} - ${Math.floor(Math.random() * 100) + 1}/FSTI/ITK/${new Date().getFullYear()}`,
-                jenis_dokumen: jenisDokumen[Math.floor(Math.random() * jenisDokumen.length)],
-                tujuan: tujuan[Math.floor(Math.random() * tujuan.length)],
-                keterangan: 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.'
+            // Create random document based on fields
+            Object.keys(mockFields).forEach(field => {
+                const fieldType = mockFields[field];
+                
+                if (fieldType === 'date') {
+                    // Generate a random date
+                    const date = new Date();
+                    date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+                    doc[field] = date.toISOString();
+                } else if (field === 'nama') {
+                    doc[field] = staff.nama;
+                } else if (field === 'nip_nipppk_niph') {
+                    doc[field] = staff.nip_nipppk_niph;
+                } else if (field === 'jurusan') {
+                    doc[field] = staff.jurusan;
+                } else if (field === 'program_studi') {
+                    doc[field] = staff.program_studi;
+                } else if (field === 'jenis_dokumen') {
+                    doc[field] = jenisDokumen[Math.floor(Math.random() * jenisDokumen.length)];
+                } else if (field === 'judul_kegiatan') {
+                    doc[field] = judulKegiatan[Math.floor(Math.random() * judulKegiatan.length)];
+                } else if (field === 'pimpinan_ttd') {
+                    doc[field] = pimpinanTtd[Math.floor(Math.random() * pimpinanTtd.length)];
+                } else if (field === 'status_persetujuan') {
+                    doc[field] = status[Math.floor(Math.random() * status.length)];
+                } else if (field === 'file_dokumen_ttd') {
+                    doc[field] = 'https://example.com/dokumen_untuk_ttd.pdf';
+                } else if (field === 'file_dokumen_sah') {
+                    doc[field] = 'https://example.com/dokumen_sudah_sah.pdf';
+                } else if (field === 'keterangan') {
+                    doc[field] = 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.';
+                } else {
+                    doc[field] = `Value for ${field}`;
+                }
             });
+            
+            mockData.push(doc);
         }
     } else if (docType === 'peminjaman_sarpras') {
+        // Define fields for peminjaman_sarpras
+        const mockFields = {
+            timestamp: 'date',
+            nama: 'string',
+            nip_nipppk_niph: 'string',
+            jurusan: 'string',
+            program_studi: 'string',
+            jenis_sarpras: 'string',
+            nama_sarpras: 'string',
+            keperluan: 'string',
+            tanggal_penggunaan: 'date',
+            waktu_penggunaan: 'string',
+            penanggung_jawab: 'string',
+            status: 'string',
+            keterangan: 'string'
+        };
+        
         const jenisSarpras = [
             'Ruang Kelas',
             'Laboratorium',
@@ -311,63 +404,62 @@ function generateMockData(docType, idFilter = '') {
             'Kegiatan Mahasiswa'
         ];
         
-        // Generate 1-5 random documents
-        const count = Math.min(Math.floor(Math.random() * 5) + 1, filteredStaff.length);
+        const waktuPenggunaan = [
+            '08:00 - 10:00',
+            '10:00 - 12:00',
+            '13:00 - 15:00',
+            '15:00 - 17:00',
+            'Seharian (08:00 - 17:00)'
+        ];
         
-        for (let i = 0; i < count; i++) {
-            // Generate random date in the last 30 days
-            const submitDate = new Date();
-            submitDate.setDate(submitDate.getDate() - Math.floor(Math.random() * 30));
+        const status = ['Diajukan', 'Diproses', 'Ditinjau', 'Disetujui', 'Selesai'];
+        
+        // Generate documents
+        for (let i = 0; i < Math.min(3, filteredStaff.length); i++) {
+            const staff = filteredStaff[i % filteredStaff.length];
+            const doc = {};
             
-            // Generate random pinjam date (0-7 days after submission)
-            const pinjamDate = new Date(submitDate);
-            pinjamDate.setDate(pinjamDate.getDate() + Math.floor(Math.random() * 7));
-            
-            // Generate random kembali date (1-7 days after pinjam)
-            const kembaliDate = new Date(pinjamDate);
-            kembaliDate.setDate(kembaliDate.getDate() + Math.floor(Math.random() * 7) + 1);
-            
-            // Select random staff member
-            const staffMember = filteredStaff[i % filteredStaff.length];
-            
-            // Create document
-            mockData.push({
-                timestamp: submitDate.toISOString(),
-                nama: staffMember.nama,
-                nip: staffMember.nip,
-                status: getRandomStatus(),
-                jenis_sarpras: jenisSarpras[Math.floor(Math.random() * jenisSarpras.length)],
-                nama_sarpras: namaSarpras[Math.floor(Math.random() * namaSarpras.length)],
-                tanggal_pinjam: pinjamDate.toISOString(),
-                tanggal_kembali: kembaliDate.toISOString(),
-                keperluan: keperluan[Math.floor(Math.random() * keperluan.length)],
-                keterangan: 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.'
+            // Create random document based on fields
+            Object.keys(mockFields).forEach(field => {
+                const fieldType = mockFields[field];
+                
+                if (fieldType === 'date') {
+                    // Generate a random date
+                    const date = new Date();
+                    date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+                    doc[field] = date.toISOString();
+                } else if (field === 'nama') {
+                    doc[field] = staff.nama;
+                } else if (field === 'nip_nipppk_niph') {
+                    doc[field] = staff.nip_nipppk_niph;
+                } else if (field === 'jurusan') {
+                    doc[field] = staff.jurusan;
+                } else if (field === 'program_studi') {
+                    doc[field] = staff.program_studi;
+                } else if (field === 'jenis_sarpras') {
+                    doc[field] = jenisSarpras[Math.floor(Math.random() * jenisSarpras.length)];
+                } else if (field === 'nama_sarpras') {
+                    doc[field] = namaSarpras[Math.floor(Math.random() * namaSarpras.length)];
+                } else if (field === 'keperluan') {
+                    doc[field] = keperluan[Math.floor(Math.random() * keperluan.length)];
+                } else if (field === 'waktu_penggunaan') {
+                    doc[field] = waktuPenggunaan[Math.floor(Math.random() * waktuPenggunaan.length)];
+                } else if (field === 'penanggung_jawab') {
+                    doc[field] = staff.nama;
+                } else if (field === 'status') {
+                    doc[field] = status[Math.floor(Math.random() * status.length)];
+                } else if (field === 'keterangan') {
+                    doc[field] = 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.';
+                } else {
+                    doc[field] = `Value for ${field}`;
+                }
             });
+            
+            mockData.push(doc);
         }
     }
     
     return mockData;
-}
-
-/**
- * Get a random status for mock data
- * @returns {string} - Random status
- */
-function getRandomStatus() {
-    const statuses = ['Diajukan', 'Diproses', 'Ditinjau', 'Disetujui', 'Selesai'];
-    const weights = [0.2, 0.2, 0.2, 0.2, 0.2]; // Equal probabilities
-    
-    let random = Math.random();
-    let sum = 0;
-    
-    for (let i = 0; i < statuses.length; i++) {
-        sum += weights[i];
-        if (random < sum) {
-            return statuses[i];
-        }
-    }
-    
-    return statuses[0]; // Default to the first status
 }
 
 /**
@@ -391,7 +483,7 @@ function displayResults(data, docType, userType) {
         if (tableBody) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="${DOC_TYPES[docType].columns.length}" class="text-center py-4">
+                    <td colspan="8" class="text-center py-4">
                         <div class="alert alert-info mb-0">
                             <i class="fas fa-info-circle me-2"></i> Tidak ada dokumen yang ditemukan
                         </div>
@@ -399,55 +491,94 @@ function displayResults(data, docType, userType) {
                 </tr>
             `;
         }
-    } else {
-        // Add table headers based on document type
-        if (tableHeader) {
-            DOC_TYPES[docType].columns.forEach(column => {
-                const th = document.createElement('th');
-                th.textContent = column.name;
-                if (column.width) th.style.width = column.width;
-                tableHeader.appendChild(th);
-            });
+        
+        // Show the results container even if empty
+        if (resultsContainer) {
+            resultsContainer.style.display = 'block';
         }
         
-        // Add table rows
-        if (tableBody) {
-            data.forEach(doc => {
-                const row = document.createElement('tr');
+        return;
+    }
+    
+    // Determine which fields to display in the table
+    // Get all fields from the first document
+    const allFields = Object.keys(data[0]);
+    
+    // Filter fields to display in the table (exclude some fields for better UI)
+    const tableFields = allFields.filter(field => 
+        !EXCLUDED_TABLE_FIELDS.some(pattern => field.includes(pattern))
+    );
+    
+    // Make sure we have an "action" column at the end
+    if (!tableFields.includes('action')) {
+        tableFields.push('action');
+    }
+    
+    // Add table headers
+    if (tableHeader) {
+        tableFields.forEach(field => {
+            const th = document.createElement('th');
+            
+            // Make the header title more readable
+            let headerName = field
+                .replace(/_/g, ' ') // Replace underscores with spaces
+                .replace(/\b\w/g, char => char.toUpperCase()); // Capitalize first letter of each word
+            
+            th.textContent = headerName;
+            
+            // Set width for some common columns
+            if (field === 'timestamp' || field.includes('tanggal')) {
+                th.style.width = '120px';
+            } else if (field === 'nama') {
+                th.style.width = '180px';
+            } else if (field === 'nip_nipppk_niph') {
+                th.style.width = '120px';
+            } else if (field.includes('status')) {
+                th.style.width = '100px';
+            } else if (field === 'action') {
+                th.style.width = '80px';
+            }
+            
+            tableHeader.appendChild(th);
+        });
+    }
+    
+    // Add table rows
+    if (tableBody) {
+        data.forEach(doc => {
+            const row = document.createElement('tr');
+            
+            // Add cells based on fields
+            tableFields.forEach(field => {
+                const cell = document.createElement('td');
                 
-                // Add cells based on document type
-                DOC_TYPES[docType].columns.forEach(column => {
-                    const cell = document.createElement('td');
-                    
-                    if (column.id === 'action') {
-                        // Create action button
-                        const button = document.createElement('button');
-                        button.className = 'btn btn-sm btn-outline-primary';
-                        button.innerHTML = '<i class="fas fa-eye"></i> Detail';
-                        button.setAttribute('data-bs-toggle', 'modal');
-                        button.setAttribute('data-bs-target', '#documentDetailModal');
-                        button.onclick = () => showDocumentDetail(doc, docType);
-                        cell.appendChild(button);
-                    } else if (column.id === 'status') {
-                        // Format status with appropriate color
-                        const status = doc[column.id] || 'Pending';
-                        const statusClass = STATUS_COLORS[status] || 'secondary';
-                        cell.innerHTML = `<span class="badge bg-${statusClass}">${status}</span>`;
-                    } else if (column.id === 'timestamp' || column.id === 'tanggal_pelaksanaan' || 
-                               column.id === 'tanggal_pinjam' || column.id === 'tanggal_kembali') {
-                        // Format dates
-                        cell.textContent = formatDate(doc[column.id]);
-                    } else {
-                        // Display regular content
-                        cell.textContent = doc[column.id] || '-';
-                    }
-                    
-                    row.appendChild(cell);
-                });
+                if (field === 'action') {
+                    // Create action button
+                    const button = document.createElement('button');
+                    button.className = 'btn btn-sm btn-outline-primary';
+                    button.innerHTML = '<i class="fas fa-eye"></i> Detail';
+                    button.setAttribute('data-bs-toggle', 'modal');
+                    button.setAttribute('data-bs-target', '#documentDetailModal');
+                    button.onclick = () => showDocumentDetail(doc, docType);
+                    cell.appendChild(button);
+                } else if (STATUS_FIELD_NAMES.includes(field)) {
+                    // Format status with appropriate color
+                    const status = doc[field] || 'Pending';
+                    const statusClass = STATUS_COLORS[status] || 'secondary';
+                    cell.innerHTML = `<span class="badge bg-${statusClass}">${status}</span>`;
+                } else if (isDateField(field)) {
+                    // Format dates
+                    cell.textContent = formatDate(doc[field]);
+                } else {
+                    // Display regular content
+                    cell.textContent = doc[field] || '-';
+                }
                 
-                tableBody.appendChild(row);
+                row.appendChild(cell);
             });
-        }
+            
+            tableBody.appendChild(row);
+        });
     }
     
     // Show the results container
@@ -455,6 +586,15 @@ function displayResults(data, docType, userType) {
         resultsContainer.style.display = 'block';
         resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+}
+
+/**
+ * Check if a field is a date field
+ * @param {string} fieldName - The field name to check
+ * @returns {boolean} - True if it's a date field
+ */
+function isDateField(fieldName) {
+    return DATE_FIELD_PATTERNS.some(pattern => fieldName.toLowerCase().includes(pattern));
 }
 
 /**
@@ -471,50 +611,80 @@ function showDocumentDetail(doc, docType) {
     // Set modal title
     modalTitle.textContent = `Detail ${DOC_TYPES[docType].name}`;
     
-    // Create content based on document type
+    // Create content from all available fields in the document
     let content = '<div class="row">';
     
-    // Left column
+    // Left column - Basic info
     content += '<div class="col-md-6">';
     content += '<h5 class="border-bottom pb-2 mb-3">Informasi Umum</h5>';
-    content += `<p><strong>Waktu Pengajuan:</strong> ${formatDate(doc.timestamp)}</p>`;
-    content += `<p><strong>Nama:</strong> ${doc.nama || '-'}</p>`;
-    content += `<p><strong>NIP:</strong> ${doc.nip || '-'}</p>`;
     
-    // Status with color
-    const status = doc.status || 'Pending';
-    const statusClass = STATUS_COLORS[status] || 'secondary';
-    content += `<p><strong>Status:</strong> <span class="badge bg-${statusClass}">${status}</span></p>`;
+    // Add common fields if they exist
+    const commonFields = ['timestamp', 'nama', 'nip_nipppk_niph', 'jurusan', 'program_studi'];
+    commonFields.forEach(field => {
+        if (doc[field] !== undefined) {
+            const label = field
+                .replace(/_/g, ' ')
+                .replace(/\b\w/g, char => char.toUpperCase());
+            
+            let value = doc[field];
+            if (isDateField(field)) {
+                value = formatDate(value);
+            }
+            
+            content += `<p><strong>${label}:</strong> ${value || '-'}</p>`;
+        }
+    });
     
-    content += '</div>';
-    
-    // Right column - specific to document type
-    content += '<div class="col-md-6">';
-    content += `<h5 class="border-bottom pb-2 mb-3">Detail ${DOC_TYPES[docType].name}</h5>`;
-    
-    if (docType === 'surat_tugas') {
-        content += `<p><strong>Judul Kegiatan:</strong> ${doc.judul_kegiatan || '-'}</p>`;
-        content += `<p><strong>Tanggal Pelaksanaan:</strong> ${formatDate(doc.tanggal_pelaksanaan)}</p>`;
-        content += `<p><strong>Lokasi:</strong> ${doc.lokasi || '-'}</p>`;
-    } else if (docType === 'ttd_dekanat') {
-        content += `<p><strong>Judul Dokumen:</strong> ${doc.judul_dokumen || '-'}</p>`;
-        content += `<p><strong>Jenis Dokumen:</strong> ${doc.jenis_dokumen || '-'}</p>`;
-        content += `<p><strong>Tujuan:</strong> ${doc.tujuan || '-'}</p>`;
-    } else if (docType === 'peminjaman_sarpras') {
-        content += `<p><strong>Jenis Sarpras:</strong> ${doc.jenis_sarpras || '-'}</p>`;
-        content += `<p><strong>Nama Sarpras:</strong> ${doc.nama_sarpras || '-'}</p>`;
-        content += `<p><strong>Tanggal Pinjam:</strong> ${formatDate(doc.tanggal_pinjam)}</p>`;
-        content += `<p><strong>Tanggal Kembali:</strong> ${formatDate(doc.tanggal_kembali)}</p>`;
-        content += `<p><strong>Keperluan:</strong> ${doc.keperluan || '-'}</p>`;
+    // Add status field if it exists (try different status field names)
+    const statusField = STATUS_FIELD_NAMES.find(field => doc[field] !== undefined);
+    if (statusField) {
+        const status = doc[statusField];
+        const statusClass = STATUS_COLORS[status] || 'secondary';
+        content += `<p><strong>Status:</strong> <span class="badge bg-${statusClass}">${status}</span></p>`;
     }
     
     content += '</div>';
     
-    // Bottom section - for all document types
-    content += '<div class="col-12 mt-4">';
-    content += '<h5 class="border-bottom pb-2 mb-3">Keterangan</h5>';
-    content += `<p>${doc.keterangan || 'Tidak ada keterangan tambahan.'}</p>`;
+    // Right column - document specific fields
+    content += '<div class="col-md-6">';
+    content += `<h5 class="border-bottom pb-2 mb-3">Detail ${DOC_TYPES[docType].name}</h5>`;
+    
+    // Get all fields excluding the common fields
+    const detailFields = Object.keys(doc).filter(field => 
+        !commonFields.includes(field) && 
+        !STATUS_FIELD_NAMES.includes(field) &&
+        field !== 'keterangan'
+    );
+    
+    detailFields.forEach(field => {
+        const label = field
+            .replace(/_/g, ' ')
+            .replace(/\b\w/g, char => char.toUpperCase());
+        
+        // Special handling for specific fields
+        if (field.includes('file') && doc[field]) {
+            // File links
+            const iconClass = field.includes('sah') ? 'fa-download' : 'fa-external-link-alt';
+            const linkText = field.includes('sah') ? 'Unduh Dokumen' : 'Lihat Dokumen';
+            content += `<p><strong>${label}:</strong> <a href="${doc[field]}" target="_blank">${linkText} <i class="fas ${iconClass}"></i></a></p>`;
+        } else if (isDateField(field)) {
+            // Format dates
+            content += `<p><strong>${label}:</strong> ${formatDate(doc[field])}</p>`;
+        } else {
+            // Regular fields
+            content += `<p><strong>${label}:</strong> ${doc[field] || '-'}</p>`;
+        }
+    });
+    
     content += '</div>';
+    
+    // Bottom section - Keterangan if it exists
+    if (doc.keterangan) {
+        content += '<div class="col-12 mt-4">';
+        content += '<h5 class="border-bottom pb-2 mb-3">Keterangan</h5>';
+        content += `<p>${doc.keterangan}</p>`;
+        content += '</div>';
+    }
     
     content += '</div>'; // End row
     
@@ -526,7 +696,9 @@ function showDocumentDetail(doc, docType) {
     
     // Create timeline based on status
     const allStatuses = ['Diajukan', 'Diproses', 'Ditinjau', 'Disetujui', 'Selesai'];
-    const currentStatusIndex = allStatuses.indexOf(doc.status || 'Diajukan');
+    const statusField = STATUS_FIELD_NAMES.find(field => doc[field] !== undefined);
+    let currentStatus = statusField ? doc[statusField] : 'Diajukan';
+    const currentStatusIndex = allStatuses.indexOf(currentStatus);
     
     allStatuses.forEach((timelineStatus, index) => {
         const timelineClass = index <= currentStatusIndex ? 'completed' : 'waiting';
