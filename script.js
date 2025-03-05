@@ -1,5 +1,5 @@
 // Ganti dengan URL Web App Google Apps Script Anda
-const API_URL = 'https://script.google.com/macros/s/AKfycbxeFGdPc-H_3_Q3XvGxX-DQ_V9pTed9W90aq6YnVfcVvpfAs5v8z-Qhw5PVvDO3RA_g/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbwEauiflKLZmm49tru33tCtKnSGwuK5Oxenj2q-pbwWhL0DeBQT9M-Y1m3ZRCBcH4EC/exec';
 
 async function fetchData() {
     try {
