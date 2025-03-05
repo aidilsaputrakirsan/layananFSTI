@@ -1,0 +1,471 @@
+/**
+ * Layanan Administrasi Prima FSTI
+ * Responsive Styles
+ */
+
+/* ===== EXTRA LARGE DEVICES (>=1200px) ===== */
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .section-title h2 {
+        font-size: 2.5rem;
+    }
+}
+
+/* ===== LARGE DEVICES (992px-1199px) ===== */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .container {
+        max-width: 960px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .section-title h2 {
+        font-size: 2.2rem;
+    }
+    
+    .feature-card,
+    .service-card,
+    .prodi-card,
+    .system-card {
+        padding: 25px;
+    }
+}
+
+/* ===== MEDIUM DEVICES (768px-991px) ===== */
+@media (min-width: 768px) and (max-width: 991.98px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .section-title h2 {
+        font-size: 2rem;
+    }
+    
+    /* Navbar Mobile Adjustments */
+    .navbar-collapse {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 10px 0;
+    }
+    
+    .dropdown-menu {
+        border: none;
+        box-shadow: none;
+        padding-left: 15px;
+    }
+    
+    /* Header Text Center on Mobile */
+    .hero-section {
+        text-align: center;
+    }
+    
+    .hero-image {
+        margin-top: 40px;
+    }
+    
+    /* Feature Cards Adjustments */
+    .feature-card,
+    .service-card,
+    .prodi-card,
+    .system-card {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    /* Team Cards Adjustments */
+    .team-card {
+        margin-bottom: 30px;
+    }
+    
+    /* Service Cards Adjustments */
+    .service-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .service-icon {
+        margin: 0 auto 15px;
+    }
+    
+    /* Footer Adjustments */
+    .footer h4 {
+        margin-top: 30px;
+    }
+}
+
+/* ===== SMALL DEVICES (576px-767px) ===== */
+@media (min-width: 576px) and (max-width: 767.98px) {
+    .container {
+        max-width: 540px;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title h2 {
+        font-size: 1.8rem;
+    }
+    
+    /* Navbar Mobile Adjustments */
+    .navbar-collapse {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    .navbar-brand span {
+        display: none; /* Hide brand text on small screens */
+    }
+    
+    /* Header Text Center on Mobile */
+    .hero-section {
+        text-align: center;
+        padding: 80px 0 30px;
+    }
+    
+    .hero-image {
+        margin-top: 30px;
+    }
+    
+    /* Section Padding Adjustments */
+    .section {
+        padding: 60px 0;
+    }
+    
+    /* Feature Cards Adjustments */
+    .feature-card,
+    .service-card,
+    .prodi-card,
+    .system-card {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    /* Team Cards Adjustments */
+    .team-card {
+        margin-bottom: 30px;
+    }
+    
+    /* Service Cards Adjustments */
+    .service-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .service-icon {
+        margin: 0 auto 15px;
+    }
+    
+    /* Footer Adjustments */
+    .footer {
+        padding: 50px 0 0;
+    }
+    
+    .footer h4 {
+        margin-top: 30px;
+    }
+    
+    .footer-bottom {
+        text-align: center;
+    }
+    
+    .footer-bottom .text-md-end {
+        text-align: center !important;
+        margin-top: 10px;
+    }
+}
+
+/* ===== EXTRA SMALL DEVICES (<576px) ===== */
+@media (max-width: 575.98px) {
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .section-title h2 {
+        font-size: 1.6rem;
+    }
+    
+    /* Navbar Mobile Adjustments */
+    .navbar-collapse {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 15px;
+    }
+    
+    .navbar-brand span {
+        display: none; /* Hide brand text on extra small screens */
+    }
+    
+    /* Header Text Center on Mobile */
+    .hero-section {
+        text-align: center;
+        padding: 70px 0 30px;
+    }
+    
+    .hero-image {
+        margin-top: 30px;
+    }
+    
+    /* Button Adjustments */
+    .hero-buttons .btn {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+    }
+    
+    /* Section Padding Adjustments */
+    .section {
+        padding: 50px 0;
+    }
+    
+    /* Feature Cards Adjustments */
+    .feature-card,
+    .service-card,
+    .prodi-card,
+    .system-card {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    /* Icon Box Size Adjustment */
+    .icon-box {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .icon-box i {
+        font-size: 1.5rem;
+    }
+    
+    /* Team Cards Adjustments */
+    .team-card {
+        margin-bottom: 20px;
+    }
+    
+    /* Service Cards Adjustments */
+    .service-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .service-icon {
+        margin: 0 auto 15px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .service-icon i {
+        font-size: 1.2rem;
+    }
+    
+    .service-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .service-body {
+        padding: 15px;
+    }
+    
+    /* Document Tracking Adjustments */
+    .tracking-form .card {
+        padding: 15px;
+    }
+    
+    .tracking-results table {
+        font-size: 0.8rem;
+    }
+    
+    .tracking-results th,
+    .tracking-results td {
+        padding: 8px 5px;
+    }
+    
+    /* Footer Adjustments */
+    .footer {
+        padding: 40px 0 0;
+    }
+    
+    .footer h4 {
+        margin-top: 30px;
+        font-size: 1.2rem;
+    }
+    
+    .social-links a {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .footer-bottom {
+        text-align: center;
+        margin-top: 30px;
+    }
+    
+    .footer-bottom .text-md-end {
+        text-align: center !important;
+        margin-top: 10px;
+    }
+    
+    /* Back to Top Button Adjustments */
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    /* Timeline Adjustments */
+    .timeline:before {
+        left: 12px;
+    }
+    
+    .timeline-item {
+        padding-left: 35px;
+    }
+    
+    .timeline-marker {
+        left: 2px;
+        width: 18px;
+        height: 18px;
+    }
+    
+    .timeline-marker i {
+        font-size: 8px;
+    }
+    
+    .timeline-content {
+        padding: 12px;
+    }
+}
+
+/* ===== SPECIAL CASES ===== */
+
+/* For very small mobile screens (Galaxy Fold, etc.) */
+@media (max-width: 320px) {
+    .navbar-brand .logo-img {
+        height: 30px;
+    }
+    
+    .hero-title {
+        font-size: 1.5rem;
+    }
+    
+    .section-title h2 {
+        font-size: 1.4rem;
+    }
+    
+    .service-card,
+    .system-card {
+        padding: 10px;
+    }
+    
+    .tracking-results table {
+        font-size: 0.7rem;
+    }
+}
+
+/* For tablets in portrait orientation */
+@media (min-width: 768px) and (max-width: 991.98px) and (orientation: portrait) {
+    .hero-section {
+        padding-top: 120px;
+    }
+}
+
+/* For tablets in landscape orientation */
+@media (min-width: 992px) and (max-width: 1199.98px) and (orientation: landscape) {
+    .hero-section {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* For devices with height less than 600px */
+@media (max-height: 600px) {
+    .hero-section {
+        padding: 80px 0 30px;
+    }
+    
+    .navbar {
+        padding: 0.5rem 0;
+    }
+}
+
+/* Print styles */
+@media print {
+    .navbar,
+    .footer,
+    .back-to-top,
+    .btn {
+        display: none !important;
+    }
+    
+    .section {
+        padding: 20px 0 !important;
+        display: block !important;
+    }
+    
+    .container {
+        max-width: 100% !important;
+    }
+    
+    body {
+        font-size: 12pt;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        page-break-after: avoid;
+    }
+    
+    img {
+        max-width: 100% !important;
+    }
+    
+    @page {
+        margin: 2cm;
+    }
+}

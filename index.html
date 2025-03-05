@@ -1,39 +1,911 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layanan FSTI - Peminjaman Sarpras</title>
+    <meta name="description" content="Layanan Administrasi Prima Fakultas Sains Teknologi Informasi (FSTI)">
+    <title>Layanan Administrasi Prima FSTI</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/logo-fsti.png" type="image/png">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <span class="navbar-brand mb-0 h1">Peminjaman Sarpras FSTI</span>
+            <a class="navbar-brand" href="#home">
+                <img src="assets/img/logo-fsti.png" alt="Logo FSTI" class="logo-img">
+                <span>Layanan FSTI</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home" data-section="home">Beranda</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="homeDropdown" role="button" data-bs-toggle="dropdown">
+                            Tentang Kami
+                        </a>
+                        <ul class="dropdown-menu animate slideIn" aria-labelledby="homeDropdown">
+                            <li><a class="dropdown-item" href="#struktur" data-section="struktur">Struktur Organisasi</a></li>
+                            <li><a class="dropdown-item" href="#visi-misi" data-section="visi-misi">Visi dan Misi</a></li>
+                            <li><a class="dropdown-item" href="#prodi" data-section="prodi">Program Studi</a></li>
+                            <li><a class="dropdown-item" href="#akreditasi" data-section="akreditasi">Akreditasi</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#mahasiswa" data-section="mahasiswa">Mahasiswa</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dosen" data-section="dosen">Dosen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#alur-kerja" data-section="alur-kerja">Alur Kerja</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="trackingDropdown" role="button" data-bs-toggle="dropdown">
+                            Document Tracking
+                        </a>
+                        <ul class="dropdown-menu animate slideIn" aria-labelledby="trackingDropdown">
+                            <li><a class="dropdown-item" href="#tracking-mahasiswa" data-section="tracking-mahasiswa">Mahasiswa</a></li>
+                            <li><a class="dropdown-item" href="#tracking-dosen" data-section="tracking-dosen">Dosen</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead class="table-dark">
-                            <tr id="tableHeaders"></tr>
-                        </thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
+    <!-- Content Container -->
+    <div id="content-container">
+        <!-- Home/Beranda Section -->
+        <section id="home" class="section active">
+            <div class="hero-section">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6" data-aos="fade-right" data-aos-delay="200">
+                            <h1 class="hero-title">Layanan Administrasi Prima FSTI</h1>
+                            <p class="hero-subtitle">Solusi terpadu untuk layanan administrasi mahasiswa dan dosen Fakultas Sains Teknologi Informasi.</p>
+                            <div class="hero-buttons">
+                                <a href="#mahasiswa" class="btn btn-primary btn-lg" data-section="mahasiswa">Layanan Mahasiswa</a>
+                                <a href="#dosen" class="btn btn-outline-primary btn-lg" data-section="dosen">Layanan Dosen</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6" data-aos="fade-left" data-aos-delay="400">
+                            <div class="hero-image">
+                                <img src="assets/img/hero-illustration.svg" alt="Ilustrasi Layanan FSTI">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <div class="container">
+                    <div class="section-title text-center" data-aos="fade-up">
+                        <h2>Layanan Unggulan Kami</h2>
+                        <p>Berbagai layanan administrasi untuk mendukung kegiatan akademik di FSTI</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="feature-card">
+                                <div class="icon-box">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h3>Administrasi Dokumen</h3>
+                                <p>Permohonan surat, legalisasi, dan pengajuan dokumen akademik.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="feature-card">
+                                <div class="icon-box">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <h3>Layanan Akademik</h3>
+                                <p>Perubahan mata kuliah, dispensasi perkuliahan, dan KP/TA.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="feature-card">
+                                <div class="icon-box">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h3>Document Tracking</h3>
+                                <p>Lacak status dokumen dan permohonan yang telah diajukan.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Struktur Organisasi Section -->
+        <section id="struktur" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Struktur Organisasi</h2>
+                    <p>Struktur organisasi Fakultas Sains Teknologi Informasi</p>
+                </div>
+                
+                <div class="org-chart" data-aos="zoom-in">
+                    <!-- Placeholder for organizational structure chart -->
+                    <div class="text-center">
+                        <img src="assets/img/org-chart.svg" alt="Struktur Organisasi FSTI" class="img-fluid">
+                    </div>
+                </div>
+                
+                <div class="row mt-5">
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="team-card">
+                            <div class="team-img">
+                                <img src="assets/img/dekan.jpg" alt="Dekan FSTI">
+                            </div>
+                            <div class="team-info">
+                                <h4>Prof. Dr. Nama Dekan</h4>
+                                <p>Dekan</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="team-card">
+                            <div class="team-img">
+                                <img src="assets/img/wadek1.jpg" alt="Wakil Dekan I">
+                            </div>
+                            <div class="team-info">
+                                <h4>Dr. Nama Wadek I</h4>
+                                <p>Wakil Dekan Akademik</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="team-card">
+                            <div class="team-img">
+                                <img src="assets/img/wadek2.jpg" alt="Wakil Dekan II">
+                            </div>
+                            <div class="team-info">
+                                <h4>Dr. Nama Wadek II</h4>
+                                <p>Wakil Dekan Keuangan & SDM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visi dan Misi Section -->
+        <section id="visi-misi" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Visi dan Misi</h2>
+                    <p>Visi dan misi Fakultas Sains Teknologi Informasi</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="vision-card">
+                            <div class="card-icon">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h3>Visi</h3>
+                            <p>Menjadi Fakultas Sains dan Teknologi Informasi terkemuka di Indonesia yang unggul dalam pendidikan, penelitian, dan pengabdian kepada masyarakat di bidang sains dan teknologi informasi untuk mendukung pembangunan berkelanjutan.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="mission-card">
+                            <div class="card-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                            <h3>Misi</h3>
+                            <ol>
+                                <li>Menyelenggarakan pendidikan berkualitas tinggi di bidang sains dan teknologi informasi.</li>
+                                <li>Melaksanakan penelitian inovatif dan publikasi ilmiah yang berkontribusi pada pengembangan ilmu pengetahuan.</li>
+                                <li>Menerapkan keahlian di bidang sains dan teknologi informasi untuk memecahkan masalah di masyarakat.</li>
+                                <li>Menjalin kerja sama dengan berbagai institusi nasional dan internasional.</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Program Studi Section -->
+        <section id="prodi" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Program Studi</h2>
+                    <p>Program studi yang tersedia di Fakultas Sains Teknologi Informasi</p>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-4 col-md-6" data-aos="flip-up" data-aos-delay="100">
+                        <div class="prodi-card">
+                            <div class="prodi-icon">
+                                <i class="fas fa-laptop-code"></i>
+                            </div>
+                            <h3>Teknik Informatika</h3>
+                            <p>Program studi yang berfokus pada pengembangan software, artificial intelligence, dan data science.</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="flip-up" data-aos-delay="200">
+                        <div class="prodi-card">
+                            <div class="prodi-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <h3>Sistem Informasi</h3>
+                            <p>Program studi yang berfokus pada analisis, desain, dan implementasi sistem informasi untuk bisnis.</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 col-md-6" data-aos="flip-up" data-aos-delay="300">
+                        <div class="prodi-card">
+                            <div class="prodi-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h3>Data Science</h3>
+                            <p>Program studi yang berfokus pada analisis data besar, statistik, dan machine learning.</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">Selengkapnya</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Akreditasi Section -->
+        <section id="akreditasi" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Akreditasi</h2>
+                    <p>Status akreditasi program studi di Fakultas Sains Teknologi Informasi</p>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="accreditation-table" data-aos="fade-up">
+                            <table class="table table-hover">
+                                <thead class="table-primary">
+                                    <tr>
+                                        <th>Program Studi</th>
+                                        <th>Peringkat Akreditasi</th>
+                                        <th>Berlaku Sampai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Teknik Informatika</td>
+                                        <td>A</td>
+                                        <td>2027</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sistem Informasi</td>
+                                        <td>A</td>
+                                        <td>2026</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Data Science</td>
+                                        <td>B</td>
+                                        <td>2025</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="accreditation-info mt-4" data-aos="fade-up">
+                            <div class="info-box">
+                                <h4><i class="fas fa-certificate"></i> Akreditasi Institusi</h4>
+                                <p>Fakultas Sains Teknologi Informasi terakreditasi A oleh Badan Akreditasi Nasional Perguruan Tinggi (BAN-PT).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mahasiswa Section -->
+        <section id="mahasiswa" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Pusat Layanan Administrasi Mahasiswa</h2>
+                    <p>Formulir-formulir pengajuan surat untuk urusan akademik mahasiswa</p>
+                </div>
+                
+                <div class="row">
+                    <!-- First Row of Services -->
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <h3>Layanan Surat Pengantar/Dokumen Umum</h3>
+                            </div>
+                            <div class="service-body">
+                                <p>Layanan pengajuan surat pengantar dan dokumen umum untuk keperluan mahasiswa.</p>
+                                <a href="#" class="btn btn-primary btn-sm">Ajukan Permohonan</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <h3>Layanan Kerja Praktek/Magang dan Tugas Akhir</h3>
+                            </div>
+                            <div class="service-body">
+                                <p>Layanan pengajuan surat untuk Kerja Praktek, Magang, dan Tugas Akhir mahasiswa.</p>
+                                <a href="#" class="btn btn-primary btn-sm">Ajukan Permohonan</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Second Row of Services -->
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-award"></i>
+                                </div>
+                                <h3>Layanan Permohonan Surat Rekomendasi/Beasiswa</h3>
+                            </div>
+                            <div class="service-body">
+                                <p>Layanan pengajuan surat rekomendasi untuk kegiatan mahasiswa dan beasiswa.</p>
+                                <a href="#" class="btn btn-primary btn-sm">Ajukan Permohonan</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-stamp"></i>
+                                </div>
+                                <h3>Layanan Legalisasi</h3>
+                            </div>
+                            <div class="service-body">
+                                <p>Layanan legalisasi dokumen akademik mahasiswa, termasuk transkrip dan ijazah.</p>
+                                <a href="#" class="btn btn-primary btn-sm">Ajukan Permohonan</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Third Row of Services -->
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <h3>Layanan Perubahan/Penambahan/Penghapusan Mata Kuliah</h3>
+                            </div>
+                            <div class="service-body">
+                                <p>Layanan untuk mengajukan perubahan, penambahan, atau penghapusan mata kuliah.</p>
+                                <a href="#" class="btn btn-primary btn-sm">Ajukan Permohonan</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="600">
+                        <div class="service-card">
+                            <div class="service-header">
+                                <div class="service-icon">
+                                    <i class="fas fa-id-card"></i>
+                                </div>
+                                <h3>Layanan Kemahasiswaan</h3>
+                            </div>
+                            <div class="service-body">
+                                <p>Layanan untuk kegiatan kemahasiswaan, organisasi, dan kepengurusan mahasiswa.</p>
+                                <a href="#" class="btn btn-primary btn-sm">Ajukan Permohonan</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dosen Section -->
+        <section id="dosen" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Pusat Layanan Administrasi Dosen</h2>
+                    <p>Layanan administrasi untuk dosen Fakultas Sains Teknologi Informasi</p>
+                </div>
+                
+                <!-- Systems Grid -->
+                <div class="systems-grid" data-aos="fade-up">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 mb-4" data-aos="zoom-in" data-aos-delay="100">
+                            <div class="system-card">
+                                <div class="system-logo">
+                                    <img src="assets/img/siakad-logo.png" alt="SIAKAD">
+                                </div>
+                                <h4>SIAKAD</h4>
+                                <p>Sistem Informasi Akademik Dosen</p>
+                                <a href="#" class="btn btn-sm btn-primary">Akses</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm-6 mb-4" data-aos="zoom-in" data-aos-delay="200">
+                            <div class="system-card">
+                                <div class="system-logo">
+                                    <img src="assets/img/simpas-logo.png" alt="SIMPAS">
+                                </div>
+                                <h4>SIMPAS</h4>
+                                <p>Sistem Informasi Manajemen Pengajaran dan Asesmen</p>
+                                <a href="#" class="btn btn-sm btn-primary">Akses</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm-6 mb-4" data-aos="zoom-in" data-aos-delay="300">
+                            <div class="system-card">
+                                <div class="system-logo">
+                                    <img src="assets/img/sipeka-logo.png" alt="SIPEKA">
+                                </div>
+                                <h4>SIPEKA</h4>
+                                <p>Sistem Informasi Penelitian dan Kinerja Akademik</p>
+                                <a href="#" class="btn btn-sm btn-primary">Akses</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm-6 mb-4" data-aos="zoom-in" data-aos-delay="400">
+                            <div class="system-card">
+                                <div class="system-logo">
+                                    <img src="assets/img/kuliah-logo.png" alt="KULIAH">
+                                </div>
+                                <h4>KULIAH</h4>
+                                <p>Platform Kuliah Daring FSTI</p>
+                                <a href="#" class="btn btn-sm btn-primary">Akses</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm-6 mb-4" data-aos="zoom-in" data-aos-delay="500">
+                            <div class="system-card">
+                                <div class="system-logo">
+                                    <img src="assets/img/simhki-logo.png" alt="SIMHKI">
+                                </div>
+                                <h4>SIMHKI</h4>
+                                <p>Sistem Informasi Manajemen Hak Kekayaan Intelektual</p>
+                                <a href="#" class="btn btn-sm btn-primary">Akses</a>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 col-sm-6 mb-4" data-aos="zoom-in" data-aos-delay="600">
+                            <div class="system-card">
+                                <div class="system-logo">
+                                    <img src="assets/img/sister-logo.png" alt="SISTER">
+                                </div>
+                                <h4>SISTER</h4>
+                                <p>Sistem Informasi Sumber Daya Terintegrasi</p>
+                                <a href="#" class="btn btn-sm btn-primary">Akses</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Services Accordion -->
+                <div class="dosen-services mt-5" data-aos="fade-up">
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="accordion" id="dosenAccordion1">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#plagiarism">
+                                            <i class="fas fa-search me-2"></i> Cek Plagiarisme
+                                        </button>
+                                    </h2>
+                                    <div id="plagiarism" class="accordion-collapse collapse show" data-bs-parent="#dosenAccordion1">
+                                        <div class="accordion-body">
+                                            <p>Layanan untuk memeriksa tingkat plagiarisme pada karya tulis.</p>
+                                            <a href="#" class="btn btn-sm btn-primary">Akses Layanan</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#templateCuti">
+                                            <i class="fas fa-file-alt me-2"></i> Template Form Cuti
+                                        </button>
+                                    </h2>
+                                    <div id="templateCuti" class="accordion-collapse collapse" data-bs-parent="#dosenAccordion1">
+                                        <div class="accordion-body">
+                                            <p>Template formulir pengajuan cuti untuk dosen.</p>
+                                            <a href="#" class="btn btn-sm btn-primary">Unduh Template</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pengajuanSurat">
+                                            <i class="fas fa-envelope me-2"></i> Layanan Pengajuan Surat Tugas
+                                        </button>
+                                    </h2>
+                                    <div id="pengajuanSurat" class="accordion-collapse collapse" data-bs-parent="#dosenAccordion1">
+                                        <div class="accordion-body">
+                                            <p>Layanan pengajuan surat tugas untuk keperluan dosen.</p>
+                                            <a href="#" class="btn btn-sm btn-primary">Ajukan Permohonan</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-6">
+                            <div class="accordion" id="dosenAccordion2">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#peminjamanSarana">
+                                            <i class="fas fa-laptop me-2"></i> Layanan Peminjaman Sarana
+                                        </button>
+                                    </h2>
+                                    <div id="peminjamanSarana" class="accordion-collapse collapse show" data-bs-parent="#dosenAccordion2">
+                                        <div class="accordion-body">
+                                            <p>Layanan peminjaman sarana dan prasarana untuk keperluan dosen.</p>
+                                            <a href="#" class="btn btn-sm btn-primary">Ajukan Peminjaman</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#pengajuanInisiasi">
+                                            <i class="fas fa-handshake me-2"></i> Layanan Pengajuan Inisiasi Kerjasama
+                                        </button>
+                                    </h2>
+                                    <div id="pengajuanInisiasi" class="accordion-collapse collapse" data-bs-parent="#dosenAccordion2">
+                                        <div class="accordion-body">
+                                            <p>Layanan pengajuan inisiasi kerjasama dengan institusi lain.</p>
+                                            <a href="#" class="btn btn-sm btn-primary">Ajukan Inisiasi</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#skAkademik">
+                                            <i class="fas fa-certificate me-2"></i> Kumpulan SK Akademik-Non Akademik
+                                        </button>
+                                    </h2>
+                                    <div id="skAkademik" class="accordion-collapse collapse" data-bs-parent="#dosenAccordion2">
+                                        <div class="accordion-body">
+                                            <p>Kumpulan Surat Keputusan (SK) terkait kegiatan akademik dan non-akademik.</p>
+                                            <a href="#" class="btn btn-sm btn-primary">Lihat Dokumen</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alur Kerja Section -->
+        <section id="alur-kerja" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Proses Bisnis Administrasi Fakultas</h2>
+                    <p>Alur kerja proses administrasi di Fakultas Sains Teknologi Informasi</p>
+                </div>
+                
+                <div class="workflow-container" data-aos="zoom-in">
+                    <div class="text-center mb-5">
+                        <img src="assets/img/workflow-diagram.svg" alt="Alur Kerja Administrasi" class="img-fluid">
+                    </div>
+                    
+                    <div class="workflow-steps">
+                        <div class="row">
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                                <div class="step-card">
+                                    <div class="step-number">1</div>
+                                    <h4>Pengajuan</h4>
+                                    <p>Mahasiswa/dosen mengajukan permohonan melalui sistem FSTI.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                                <div class="step-card">
+                                    <div class="step-number">2</div>
+                                    <h4>Verifikasi</h4>
+                                    <p>Tim administrasi memverifikasi kelengkapan dokumen dan persyaratan.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                                <div class="step-card">
+                                    <div class="step-number">3</div>
+                                    <h4>Proses</h4>
+                                    <p>Dokumen diproses dan ditindaklanjuti oleh pihak terkait.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+                                <div class="step-card">
+                                    <div class="step-number">4</div>
+                                    <h4>Pengesahan</h4>
+                                    <p>Dokumen disahkan oleh pejabat yang berwenang.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="500">
+                                <div class="step-card">
+                                    <div class="step-number">5</div>
+                                    <h4>Distribusi</h4>
+                                    <p>Dokumen jadi didistribusikan kepada pemohon.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4" data-aos="fade-up" data-aos-delay="600">
+                                <div class="step-card">
+                                    <div class="step-number">6</div>
+                                    <h4>Arsip</h4>
+                                    <p>Dokumen diarsipkan dalam sistem dokumentasi FSTI.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Document Tracking - Mahasiswa Section -->
+        <section id="tracking-mahasiswa" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Document Tracking Mahasiswa</h2>
+                    <p>Lacak status dokumen atau permohonan yang telah diajukan</p>
+                </div>
+                
+                <div class="tracking-form" data-aos="fade-up">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4"><i class="fas fa-search-location"></i> Cari Dokumen</h4>
+                                    <form id="trackingFormMahasiswa">
+                                        <div class="form-group mb-3">
+                                            <label for="nim">NIM</label>
+                                            <input type="text" class="form-control" id="nim" placeholder="Masukkan NIM">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="docTypeMhs">Jenis Dokumen</label>
+                                            <select class="form-select" id="docTypeMhs">
+                                                <option value="" selected>Pilih Jenis Dokumen</option>
+                                                <option value="surat_pengantar">Surat Pengantar</option>
+                                                <option value="surat_kp">Surat Kerja Praktek</option>
+                                                <option value="surat_rekomendasi">Surat Rekomendasi</option>
+                                                <option value="legalisasi">Legalisasi Dokumen</option>
+                                                <option value="perubahan_mk">Perubahan Mata Kuliah</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="dateSubmit">Tanggal Pengajuan</label>
+                                            <input type="date" class="form-control" id="dateSubmit">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Lacak Dokumen</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tracking-results mt-5" style="display: none;" data-aos="fade-up">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4"><i class="fas fa-clipboard-list"></i> Hasil Pencarian Dokumen</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th>No. Dokumen</th>
+                                                    <th>Jenis Dokumen</th>
+                                                    <th>Tanggal Pengajuan</th>
+                                                    <th>Status</th>
+                                                    <th>Tahap</th>
+                                                    <th>Estimasi Selesai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trackingResultsMhs">
+                                                <!-- Tracking results will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Document Tracking - Dosen Section -->
+        <section id="tracking-dosen" class="section">
+            <div class="container">
+                <div class="section-title text-center" data-aos="fade-up">
+                    <h2>Document Tracking Dosen</h2>
+                    <p>Lacak status dokumen atau permohonan yang telah diajukan</p>
+                </div>
+                
+                <div class="tracking-form" data-aos="fade-up">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4"><i class="fas fa-search-location"></i> Cari Dokumen</h4>
+                                    <form id="trackingFormDosen">
+                                        <div class="form-group mb-3">
+                                            <label for="nip">NIP/NIDN</label>
+                                            <input type="text" class="form-control" id="nip" placeholder="Masukkan NIP/NIDN">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="docTypeDs">Jenis Dokumen</label>
+                                            <select class="form-select" id="docTypeDs">
+                                                <option value="" selected>Pilih Jenis Dokumen</option>
+                                                <option value="surat_tugas">Surat Tugas</option>
+                                                <option value="surat_kerjasama">Surat Kerjasama</option>
+                                                <option value="sk_mengajar">SK Mengajar</option>
+                                                <option value="sk_penelitian">SK Penelitian</option>
+                                                <option value="sk_pengabdian">SK Pengabdian</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="dateSubmitDs">Tanggal Pengajuan</label>
+                                            <input type="date" class="form-control" id="dateSubmitDs">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100">Lacak Dokumen</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tracking-results mt-5" style="display: none;" data-aos="fade-up">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-10">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4"><i class="fas fa-clipboard-list"></i> Hasil Pencarian Dokumen</h4>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead class="table-primary">
+                                                <tr>
+                                                    <th>No. Dokumen</th>
+                                                    <th>Jenis Dokumen</th>
+                                                    <th>Tanggal Pengajuan</th>
+                                                    <th>Status</th>
+                                                    <th>Tahap</th>
+                                                    <th>Estimasi Selesai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="trackingResultsDs">
+                                                <!-- Tracking results will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4>Layanan Administrasi Prima FSTI</h4>
+                    <p>Fakultas Sains Teknologi Informasi<br>Kampus Utama, Gedung B Lantai 2<br>Jl. Pendidikan No. 123, Kota</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h4>Tautan Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="#home">Beranda</a></li>
+                        <li><a href="#mahasiswa">Layanan Mahasiswa</a></li>
+                        <li><a href="#dosen">Layanan Dosen</a></li>
+                        <li><a href="#alur-kerja">Alur Kerja</a></li>
+                        <li><a href="#tracking-mahasiswa">Document Tracking</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-4">
+                    <h4>Hubungi Kami</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-phone"></i> (021) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> admin@fsti.ac.id</li>
+                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08.00 - 16.00</li>
+                    </ul>
+                    <div class="newsletter">
+                        <h5>Berlangganan Berita</h5>
+                        <form>
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Email Anda">
+                                <button class="btn btn-primary" type="submit">Langganan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>&copy; 2025 Fakultas Sains Teknologi Informasi. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <p><a href="#">Kebijakan Privasi</a> | <a href="#">Syarat & Ketentuan</a></p>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </footer>
 
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i></a>
+
+    <!-- Loading Animation for Document Tracking -->
+    <div id="loadingAnimation" style="display: none;">
+        <div class="spinner-grow text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- AOS Animation JS -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    
     <!-- Custom JS -->
-    <script src="/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

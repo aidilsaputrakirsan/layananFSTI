@@ -1,101 +1,441 @@
-// Ganti dengan URL Web App Google Apps Script Anda
-const API_URL = 'https://script.google.com/macros/s/AKfycbwEauiflKLZmm49tru33tCtKnSGwuK5Oxenj2q-pbwWhL0DeBQT9M-Y1m3ZRCBcH4EC/exec';
+/**
+ * Layanan Administrasi Prima FSTI
+ * Main JavaScript File
+ */
 
-async function fetchData() {
-    try {
-        console.log('Fetching data from:', API_URL);
-        
-        const response = await fetch(API_URL, {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json'
+// Wait for the document to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize AOS animation library
+    AOS.init({
+        duration: 800,
+        easing: 'ease-in-out',
+        once: true,
+        mirror: false
+    });
+    
+    // Hide preloader when page is loaded
+    setTimeout(function() {
+        document.getElementById('preloader').style.display = 'none';
+    }, 500);
+    
+    // Navigation handling
+    setupNavigation();
+    
+    // Scroll events
+    handleScrollEvents();
+    
+    // Form submissions
+    setupFormHandlers();
+    
+    // Initialize all tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
+
+/**
+ * Setup navigation functionality
+ */
+function setupNavigation() {
+    // Get all navigation links with data-section attribute
+    const navLinks = document.querySelectorAll('.nav-link[data-section], .dropdown-item[data-section]');
+    
+    // Add click event to each navigation link
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get the target section id
+            const targetId = this.getAttribute('data-section');
+            
+            // Navigate to the section
+            navigateToSection(targetId);
+            
+            // Close the mobile menu if open
+            const navbarCollapse = document.querySelector('.navbar-collapse');
+            if (navbarCollapse.classList.contains('show')) {
+                const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                bsCollapse.hide();
             }
         });
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        console.log('Received data:', data);  // Debug log
-        
-        // Show loading state
-        document.getElementById('tableBody').innerHTML = '<tr><td colspan="100%" class="text-center">Loading data...</td></tr>';
-        
-        // Handle empty or invalid response
-        if (!data) {
-            throw new Error('No data received');
-        }
-        
-        // Clear existing content
-        const headerRow = document.getElementById('tableHeaders');
-        const tableBody = document.getElementById('tableBody');
-        headerRow.innerHTML = '';
-        tableBody.innerHTML = '';
-        
-        // Populate headers
-        if (Array.isArray(data.headers)) {
-            data.headers.forEach(header => {
-                const th = document.createElement('th');
-                th.textContent = header;
-                headerRow.appendChild(th);
-            });
-        } else {
-            throw new Error('Headers not found in response');
-        }
-        
-        // Populate data
-        if (Array.isArray(data.rows)) {
-            data.rows.forEach(row => {
-                const tr = document.createElement('tr');
-                row.forEach(cell => {
-                    const td = document.createElement('td');
-                    // Handle date formatting
-                    if (typeof cell === 'string' && cell.match(/^\d{4}-\d{2}-\d{2}/)) {
-                        const date = new Date(cell);
-                        td.textContent = date.toLocaleDateString('id-ID');
-                    } else {
-                        td.textContent = cell || '';
-                    }
-                    tr.appendChild(td);
-                });
-                tableBody.appendChild(tr);
-            });
-        } else {
-            throw new Error('No rows found in response');
-        }
-        
-        // Add timestamp
-        const timestamp = document.createElement('div');
-        timestamp.className = 'text-muted small mt-2';
-        timestamp.textContent = `Last updated: ${new Date().toLocaleString('id-ID')}`;
-        document.querySelector('.card-body').appendChild(timestamp);
-        
-    } catch (error) {
-        console.error('Error:', error);  // Debug log
-        document.getElementById('tableBody').innerHTML = `
-            <tr>
-                <td colspan="100%" class="text-center text-danger">
-                    <div class="alert alert-danger">
-                        Error: ${error.message}
-                        <br>
-                        <small>Please check the console for more details.</small>
-                    </div>
-                </td>
-            </tr>
-        `;
+    });
+    
+    // Handle initial load - check if URL has a hash
+    if (window.location.hash) {
+        const targetId = window.location.hash.substring(1);
+        setTimeout(() => {
+            navigateToSection(targetId);
+        }, 300);
     }
 }
 
-// Load data when page loads
-document.addEventListener('DOMContentLoaded', fetchData);
+/**
+ * Navigate to a specific section
+ * @param {string} sectionId - The ID of the section to navigate to
+ */
+function navigateToSection(sectionId) {
+    // Hide all sections
+    const allSections = document.querySelectorAll('.section');
+    allSections.forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show the target section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        
+        // Update URL hash without scrolling
+        history.pushState(null, null, '#' + sectionId);
+        
+        // Update active state in navigation
+        updateActiveNavLink(sectionId);
+        
+        // Scroll to top of the section
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        
+        // Add zoom-in animation to the section
+        targetSection.classList.add('zoom-in');
+        setTimeout(() => {
+            targetSection.classList.remove('zoom-in');
+        }, 500);
+    }
+}
 
-// Add refresh button if needed
-document.addEventListener('DOMContentLoaded', () => {
-    const refreshButton = document.createElement('button');
-    refreshButton.className = 'btn btn-primary mb-3';
-    refreshButton.textContent = 'Refresh Data';
-    refreshButton.onclick = fetchData;
-    document.querySelector('.card-body').insertBefore(refreshButton, document.querySelector('.table-responsive'));
-});
+/**
+ * Update active state in navigation links
+ * @param {string} activeSectionId - The ID of the active section
+ */
+function updateActiveNavLink(activeSectionId) {
+    // Remove active class from all links
+    const allLinks = document.querySelectorAll('.nav-link, .dropdown-item');
+    allLinks.forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to links pointing to the active section
+    const activeLinks = document.querySelectorAll(`.nav-link[data-section="${activeSectionId}"], .dropdown-item[data-section="${activeSectionId}"]`);
+    activeLinks.forEach(link => {
+        link.classList.add('active');
+        
+        // If the link is in a dropdown, also activate the dropdown toggle
+        const dropdownParent = link.closest('.dropdown');
+        if (dropdownParent) {
+            const dropdownToggle = dropdownParent.querySelector('.dropdown-toggle');
+            if (dropdownToggle) {
+                dropdownToggle.classList.add('active');
+            }
+        }
+    });
+}
+
+/**
+ * Handle scroll events
+ */
+function handleScrollEvents() {
+    // Add scrolled class to navbar on scroll
+    window.addEventListener('scroll', function() {
+        const navbar = document.querySelector('.navbar');
+        if (window.scrollY > 20) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+        
+        // Show/hide back-to-top button
+        const backToTop = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) {
+            backToTop.classList.add('active');
+        } else {
+            backToTop.classList.remove('active');
+        }
+    });
+    
+    // Back to top button click event
+    const backToTop = document.querySelector('.back-to-top');
+    if (backToTop) {
+        backToTop.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+}
+
+/**
+ * Setup form handlers
+ */
+function setupFormHandlers() {
+    // Mahasiswa tracking form
+    const trackingFormMhs = document.getElementById('trackingFormMahasiswa');
+    if (trackingFormMhs) {
+        trackingFormMhs.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading animation
+            document.getElementById('loadingAnimation').style.display = 'block';
+            
+            // Simulate data loading (replace with actual API call)
+            setTimeout(() => {
+                // Hide loading animation
+                document.getElementById('loadingAnimation').style.display = 'none';
+                
+                // Get form values
+                const nim = document.getElementById('nim').value;
+                const docType = document.getElementById('docTypeMhs').value;
+                
+                // Generate dummy data for demonstration
+                const dummyData = generateTrackingData(nim, docType, 'mahasiswa');
+                
+                // Display results
+                displayTrackingResults(dummyData, 'trackingResultsMhs');
+                
+                // Show results container
+                const resultsContainer = trackingFormMhs.closest('.tracking-form').nextElementSibling;
+                resultsContainer.style.display = 'block';
+                
+                // Scroll to results
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 1500);
+        });
+    }
+    
+    // Dosen tracking form
+    const trackingFormDs = document.getElementById('trackingFormDosen');
+    if (trackingFormDs) {
+        trackingFormDs.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading animation
+            document.getElementById('loadingAnimation').style.display = 'block';
+            
+            // Simulate data loading (replace with actual API call)
+            setTimeout(() => {
+                // Hide loading animation
+                document.getElementById('loadingAnimation').style.display = 'none';
+                
+                // Get form values
+                const nip = document.getElementById('nip').value;
+                const docType = document.getElementById('docTypeDs').value;
+                
+                // Generate dummy data for demonstration
+                const dummyData = generateTrackingData(nip, docType, 'dosen');
+                
+                // Display results
+                displayTrackingResults(dummyData, 'trackingResultsDs');
+                
+                // Show results container
+                const resultsContainer = trackingFormDs.closest('.tracking-form').nextElementSibling;
+                resultsContainer.style.display = 'block';
+                
+                // Scroll to results
+                resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 1500);
+        });
+    }
+}
+
+/**
+ * Generate dummy tracking data for demonstration
+ * @param {string} id - NIM or NIP
+ * @param {string} docType - Document type
+ * @param {string} userType - 'mahasiswa' or 'dosen'
+ * @returns {Array} - Array of tracking data objects
+ */
+function generateTrackingData(id, docType, userType) {
+    // Document types based on user type
+    const docTypes = {
+        mahasiswa: {
+            'surat_pengantar': 'Surat Pengantar',
+            'surat_kp': 'Surat Kerja Praktek',
+            'surat_rekomendasi': 'Surat Rekomendasi',
+            'legalisasi': 'Legalisasi Dokumen',
+            'perubahan_mk': 'Perubahan Mata Kuliah'
+        },
+        dosen: {
+            'surat_tugas': 'Surat Tugas',
+            'surat_kerjasama': 'Surat Kerjasama',
+            'sk_mengajar': 'SK Mengajar',
+            'sk_penelitian': 'SK Penelitian',
+            'sk_pengabdian': 'SK Pengabdian'
+        }
+    };
+    
+    // Possible statuses
+    const statuses = ['Diproses', 'Diverifikasi', 'Dalam Review', 'Ditandatangani', 'Selesai', 'Dibatalkan', 'Ditolak'];
+    
+    // Possible stages
+    const stages = ['Pengajuan', 'Verifikasi Admin', 'Review Kaprodi', 'Review Dekan', 'Pengesahan', 'Distribusi'];
+    
+    // Generate random number of documents (1-3)
+    const numDocs = Math.floor(Math.random() * 3) + 1;
+    const results = [];
+    
+    for (let i = 0; i < numDocs; i++) {
+        // Generate random date in the last 30 days
+        const date = new Date();
+        date.setDate(date.getDate() - Math.floor(Math.random() * 30));
+        const dateStr = date.toISOString().split('T')[0];
+        
+        // Generate random status
+        const statusIndex = Math.floor(Math.random() * statuses.length);
+        const status = statuses[statusIndex];
+        
+        // Generate random stage based on status
+        let stage;
+        if (status === 'Selesai') {
+            stage = 'Distribusi';
+        } else if (status === 'Dibatalkan' || status === 'Ditolak') {
+            stage = stages[Math.floor(Math.random() * 3)];
+        } else {
+            stage = stages[Math.min(statusIndex, stages.length - 1)];
+        }
+        
+        // Generate estimated completion date (7-14 days after submission)
+        const estDate = new Date(date);
+        estDate.setDate(estDate.getDate() + 7 + Math.floor(Math.random() * 7));
+        const estDateStr = estDate.toISOString().split('T')[0];
+        
+        // Create document object
+        const doc = {
+            docNumber: `DOC-${userType.charAt(0).toUpperCase()}${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
+            docType: docType ? docTypes[userType][docType] : Object.values(docTypes[userType])[Math.floor(Math.random() * Object.values(docTypes[userType]).length)],
+            dateSubmit: dateStr,
+            status: status,
+            stage: stage,
+            estCompletion: estDateStr
+        };
+        
+        results.push(doc);
+    }
+    
+    return results;
+}
+
+/**
+ * Display tracking results in the specified container
+ * @param {Array} data - Array of tracking data objects
+ * @param {string} containerId - ID of the container to display results
+ */
+function displayTrackingResults(data, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    // Clear previous results
+    container.innerHTML = '';
+    
+    // Check if we have data
+    if (data.length === 0) {
+        container.innerHTML = '<tr><td colspan="6" class="text-center">Tidak ada dokumen yang ditemukan</td></tr>';
+        return;
+    }
+    
+    // Create HTML for each document
+    data.forEach(doc => {
+        const row = document.createElement('tr');
+        
+        // Set status class
+        let statusClass = '';
+        switch (doc.status) {
+            case 'Selesai':
+                statusClass = 'text-success';
+                break;
+            case 'Dibatalkan':
+            case 'Ditolak':
+                statusClass = 'text-danger';
+                break;
+            case 'Diproses':
+            case 'Diverifikasi':
+            case 'Dalam Review':
+                statusClass = 'text-primary';
+                break;
+            case 'Ditandatangani':
+                statusClass = 'text-info';
+                break;
+            default:
+                statusClass = '';
+        }
+        
+        // Create table row
+        row.innerHTML = `
+            <td>${doc.docNumber}</td>
+            <td>${doc.docType}</td>
+            <td>${formatDate(doc.dateSubmit)}</td>
+            <td><span class="${statusClass} fw-bold">${doc.status}</span></td>
+            <td>${doc.stage}</td>
+            <td>${formatDate(doc.estCompletion)}</td>
+        `;
+        
+        container.appendChild(row);
+    });
+}
+
+/**
+ * Format date string to Indonesian format
+ * @param {string} dateStr - Date string in YYYY-MM-DD format
+ * @returns {string} - Formatted date string
+ */
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('id-ID', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+}
+
+/**
+ * Add animation to elements when they enter the viewport
+ */
+function animateOnScroll() {
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+    
+    animatedElements.forEach(element => {
+        if (isElementInViewport(element)) {
+            element.classList.add('animated');
+        }
+    });
+}
+
+/**
+ * Check if an element is in the viewport
+ * @param {HTMLElement} element - The element to check
+ * @returns {boolean} - True if element is in viewport
+ */
+function isElementInViewport(element) {
+    const rect = element.getBoundingClientRect();
+    return (
+        rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.bottom >= 0
+    );
+}
+
+/**
+ * Set up smooth scrolling for all links with hash
+ */
+function setupSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// Call animateOnScroll function on scroll
+window.addEventListener('scroll', animateOnScroll);
+window.addEventListener('load', animateOnScroll);
