@@ -1,0 +1,132 @@
+/**
+ * Document Tracking System CSS
+ * Styles for the document tracking functionality
+ */
+
+/* Timeline styles */
+.timeline {
+    position: relative;
+    padding: 20px 0;
+    margin-top: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    height: 100%;
+    width: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 50px;
+    margin-bottom: 30px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 11px;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.timeline-marker i {
+    font-size: 12px;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.timeline-item.completed .timeline-content {
+    border-left: 3px solid #28a745;
+}
+
+.timeline-item.in-progress .timeline-content {
+    border-left: 3px solid #2f4dd3;
+}
+
+.timeline-item.waiting .timeline-content {
+    border-left: 3px solid #6c757d;
+}
+
+/* Tracking results table */
+.tracking-results .table th {
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.tracking-results .table td {
+    vertical-align: middle;
+}
+
+/* Loading spinner */
+#tracking-spinner {
+    padding: 30px 0;
+}
+
+/* Document detail modal */
+#documentDetailModal .modal-body {
+    padding: 20px;
+}
+
+#documentDetailModal h5 {
+    color: #2f4dd3;
+    margin-top: 20px;
+}
+
+#documentDetailModal p {
+    margin-bottom: 10px;
+}
+
+#documentDetailModal strong {
+    font-weight: 600;
+}
+
+/* Responsive styles */
+@media (max-width: 767.98px) {
+    .timeline::before {
+        left: 15px;
+    }
+    
+    .timeline-item {
+        padding-left: 40px;
+    }
+    
+    .timeline-marker {
+        left: 6px;
+        width: 20px;
+        height: 20px;
+    }
+    
+    .timeline-marker i {
+        font-size: 10px;
+    }
+    
+    .tracking-results .table {
+        font-size: 0.9rem;
+    }
+    
+    #documentDetailModal .modal-body {
+        padding: 15px;
+    }
+}
