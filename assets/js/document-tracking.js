@@ -3,8 +3,11 @@
  * This script handles the document tracking functionality for both students and staff
  */
 
-// Google Apps Script deployed web app URL
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx-WXqXPuzSsaduKgi29gB-4qBzRxr4CWMIXqelO5BWHZ-yKKVHEDlRq29vCXstHiM/exec';
+// Temporary solution: For demo purposes only - In a real application, you would use the Apps Script Web App URL
+const DEMO_MODE = true;
+
+// Google Apps Script deployed web app URL - Replace this with your actual deployed script URL
+const SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID_HERE/exec';
 
 // Document type mapping
 const DOC_TYPES = {
@@ -12,46 +15,43 @@ const DOC_TYPES = {
         name: 'Permohonan Surat Tugas',
         sheet: 'Permohonan Surat Tugas',
         columns: [
-            { id: 'timestamp', name: 'Waktu Pengajuan', width: '150px' },
+            { id: 'timestamp', name: 'Waktu Pengajuan', width: '120px' },
             { id: 'nama', name: 'Nama Lengkap', width: '180px' },
             { id: 'nip', name: 'NIP', width: '120px' },
             { id: 'status', name: 'Status', width: '100px' },
             { id: 'judul_kegiatan', name: 'Judul Kegiatan', width: '200px' },
-            { id: 'tanggal_pelaksanaan', name: 'Tanggal Pelaksanaan', width: '150px' },
-            { id: 'lokasi', name: 'Lokasi', width: '150px' },
-            { id: 'keterangan', name: 'Keterangan', width: '150px' },
-            { id: 'action', name: 'Aksi', width: '100px' }
+            { id: 'tanggal_pelaksanaan', name: 'Tanggal Pelaksanaan', width: '120px' },
+            { id: 'lokasi', name: 'Lokasi', width: '120px' },
+            { id: 'action', name: 'Aksi', width: '80px' }
         ]
     },
     'ttd_dekanat': {
-        name: 'Pengesahan TTD Dekanat',
+        name: 'Pengesahan TTD Dekan',
         sheet: 'Pengesahan TTD Dekanat',
         columns: [
-            { id: 'timestamp', name: 'Waktu Pengajuan', width: '150px' },
+            { id: 'timestamp', name: 'Waktu Pengajuan', width: '120px' },
             { id: 'nama', name: 'Nama Lengkap', width: '180px' },
             { id: 'nip', name: 'NIP', width: '120px' },
             { id: 'status', name: 'Status', width: '100px' },
             { id: 'judul_dokumen', name: 'Judul Dokumen', width: '200px' },
-            { id: 'jenis_dokumen', name: 'Jenis Dokumen', width: '150px' },
-            { id: 'tujuan', name: 'Tujuan', width: '150px' },
-            { id: 'keterangan', name: 'Keterangan', width: '150px' },
-            { id: 'action', name: 'Aksi', width: '100px' }
+            { id: 'jenis_dokumen', name: 'Jenis Dokumen', width: '120px' },
+            { id: 'tujuan', name: 'Tujuan', width: '120px' },
+            { id: 'action', name: 'Aksi', width: '80px' }
         ]
     },
     'peminjaman_sarpras': {
         name: 'Peminjaman Sarana Prasarana',
         sheet: 'Peminjaman Sarpras',
         columns: [
-            { id: 'timestamp', name: 'Waktu Pengajuan', width: '150px' },
+            { id: 'timestamp', name: 'Waktu Pengajuan', width: '120px' },
             { id: 'nama', name: 'Nama Lengkap', width: '180px' },
             { id: 'nip', name: 'NIP', width: '120px' },
             { id: 'status', name: 'Status', width: '100px' },
-            { id: 'jenis_sarpras', name: 'Jenis Sarpras', width: '150px' },
-            { id: 'nama_sarpras', name: 'Nama Sarpras', width: '150px' },
-            { id: 'tanggal_pinjam', name: 'Tanggal Pinjam', width: '150px' },
-            { id: 'tanggal_kembali', name: 'Tanggal Kembali', width: '150px' },
-            { id: 'keperluan', name: 'Keperluan', width: '200px' },
-            { id: 'action', name: 'Aksi', width: '100px' }
+            { id: 'jenis_sarpras', name: 'Jenis Sarpras', width: '120px' },
+            { id: 'nama_sarpras', name: 'Nama Sarpras', width: '120px' },
+            { id: 'tanggal_pinjam', name: 'Tanggal Pinjam', width: '120px' },
+            { id: 'tanggal_kembali', name: 'Tanggal Kembali', width: '120px' },
+            { id: 'action', name: 'Aksi', width: '80px' }
         ]
     }
 };
@@ -145,6 +145,16 @@ function trackDocument(userType) {
  * @param {string} userType - 'dosen' or 'mahasiswa'
  */
 function fetchDocuments(params, docType, userType) {
+    // If in demo mode, return mock data instead of calling the API
+    if (DEMO_MODE) {
+        console.log('Running in demo mode - Using mock data');
+        setTimeout(() => {
+            const mockData = generateMockData(docType, params.id);
+            displayResults(mockData, docType, userType);
+        }, 1000); // Simulate API delay
+        return;
+    }
+    
     // Build the URL with query parameters
     const url = new URL(SCRIPT_URL);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
@@ -170,6 +180,194 @@ function fetchDocuments(params, docType, userType) {
             const spinner = document.getElementById('tracking-spinner');
             if (spinner) spinner.style.display = 'none';
         });
+}
+
+/**
+ * Generate mock data for demo mode
+ * @param {string} docType - Document type
+ * @param {string} idFilter - Optional ID filter
+ * @returns {Array} - Array of mock document objects
+ */
+function generateMockData(docType, idFilter = '') {
+    let mockData = [];
+    
+    // Common staff data
+    const staff = [
+        { nama: 'Adi Mahmud Jaya Marindra', nip: '199012312019031001' },
+        { nama: 'Irma Fitria', nip: '199104142019032021' },
+        { nama: 'Yun Tonce Kusuma Priyanto', nip: '198810302015041001' },
+        { nama: 'Swastya Rahastama', nip: '199205162019031011' },
+        { nama: 'M. Ihsan Alfani Putera', nip: '199309212019031011' },
+        { nama: 'Desy Ridho Rahayu', nip: '199512172020122021' }
+    ];
+    
+    // Filter staff by NIP if idFilter is provided
+    let filteredStaff = staff;
+    if (idFilter) {
+        filteredStaff = staff.filter(s => s.nip.includes(idFilter));
+    }
+    
+    // Generate data based on document type
+    if (docType === 'surat_tugas') {
+        const kegiatan = [
+            'Seminar Nasional Teknologi Informasi',
+            'Workshop Artificial Intelligence',
+            'Pelatihan Data Science',
+            'Konferensi Internasional',
+            'Kunjungan Industri'
+        ];
+        
+        const lokasi = ['Balikpapan', 'Jakarta', 'Surabaya', 'Bandung', 'Online'];
+        
+        // Generate 1-5 random documents
+        const count = Math.min(Math.floor(Math.random() * 5) + 1, filteredStaff.length);
+        
+        for (let i = 0; i < count; i++) {
+            // Generate random date in the last 30 days
+            const submitDate = new Date();
+            submitDate.setDate(submitDate.getDate() - Math.floor(Math.random() * 30));
+            
+            // Generate random pelaksanaan date (1-14 days after submission)
+            const pelaksanaanDate = new Date(submitDate);
+            pelaksanaanDate.setDate(pelaksanaanDate.getDate() + Math.floor(Math.random() * 14) + 1);
+            
+            // Select random staff member
+            const staffMember = filteredStaff[i % filteredStaff.length];
+            
+            // Create document
+            mockData.push({
+                timestamp: submitDate.toISOString(),
+                nama: staffMember.nama,
+                nip: staffMember.nip,
+                status: getRandomStatus(),
+                judul_kegiatan: kegiatan[Math.floor(Math.random() * kegiatan.length)],
+                tanggal_pelaksanaan: pelaksanaanDate.toISOString(),
+                lokasi: lokasi[Math.floor(Math.random() * lokasi.length)],
+                keterangan: 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.'
+            });
+        }
+    } else if (docType === 'ttd_dekanat') {
+        const jenisDokumen = [
+            'Surat Keputusan',
+            'Surat Rekomendasi',
+            'Surat Keterangan',
+            'Berita Acara',
+            'Laporan Akhir'
+        ];
+        
+        const tujuan = [
+            'Kementerian Pendidikan',
+            'Rektor ITK',
+            'Kepala Laboratorium',
+            'Perusahaan Mitra',
+            'Internal Fakultas'
+        ];
+        
+        // Generate 1-5 random documents
+        const count = Math.min(Math.floor(Math.random() * 5) + 1, filteredStaff.length);
+        
+        for (let i = 0; i < count; i++) {
+            // Generate random date in the last 30 days
+            const submitDate = new Date();
+            submitDate.setDate(submitDate.getDate() - Math.floor(Math.random() * 30));
+            
+            // Select random staff member
+            const staffMember = filteredStaff[i % filteredStaff.length];
+            
+            // Create document
+            mockData.push({
+                timestamp: submitDate.toISOString(),
+                nama: staffMember.nama,
+                nip: staffMember.nip,
+                status: getRandomStatus(),
+                judul_dokumen: `${jenisDokumen[Math.floor(Math.random() * jenisDokumen.length)]} - ${Math.floor(Math.random() * 100) + 1}/FSTI/ITK/${new Date().getFullYear()}`,
+                jenis_dokumen: jenisDokumen[Math.floor(Math.random() * jenisDokumen.length)],
+                tujuan: tujuan[Math.floor(Math.random() * tujuan.length)],
+                keterangan: 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.'
+            });
+        }
+    } else if (docType === 'peminjaman_sarpras') {
+        const jenisSarpras = [
+            'Ruang Kelas',
+            'Laboratorium',
+            'Peralatan Audio Visual',
+            'Laptop',
+            'Proyektor'
+        ];
+        
+        const namaSarpras = [
+            'Ruang Rapat Utama',
+            'Lab Komputer A',
+            'Sound System',
+            'Laptop Acer Aspire',
+            'Projector Epson'
+        ];
+        
+        const keperluan = [
+            'Perkuliahan',
+            'Praktikum',
+            'Seminar',
+            'Rapat Dosen',
+            'Kegiatan Mahasiswa'
+        ];
+        
+        // Generate 1-5 random documents
+        const count = Math.min(Math.floor(Math.random() * 5) + 1, filteredStaff.length);
+        
+        for (let i = 0; i < count; i++) {
+            // Generate random date in the last 30 days
+            const submitDate = new Date();
+            submitDate.setDate(submitDate.getDate() - Math.floor(Math.random() * 30));
+            
+            // Generate random pinjam date (0-7 days after submission)
+            const pinjamDate = new Date(submitDate);
+            pinjamDate.setDate(pinjamDate.getDate() + Math.floor(Math.random() * 7));
+            
+            // Generate random kembali date (1-7 days after pinjam)
+            const kembaliDate = new Date(pinjamDate);
+            kembaliDate.setDate(kembaliDate.getDate() + Math.floor(Math.random() * 7) + 1);
+            
+            // Select random staff member
+            const staffMember = filteredStaff[i % filteredStaff.length];
+            
+            // Create document
+            mockData.push({
+                timestamp: submitDate.toISOString(),
+                nama: staffMember.nama,
+                nip: staffMember.nip,
+                status: getRandomStatus(),
+                jenis_sarpras: jenisSarpras[Math.floor(Math.random() * jenisSarpras.length)],
+                nama_sarpras: namaSarpras[Math.floor(Math.random() * namaSarpras.length)],
+                tanggal_pinjam: pinjamDate.toISOString(),
+                tanggal_kembali: kembaliDate.toISOString(),
+                keperluan: keperluan[Math.floor(Math.random() * keperluan.length)],
+                keterangan: 'Dokumen ini dibuat untuk demo. Ini adalah data dummy.'
+            });
+        }
+    }
+    
+    return mockData;
+}
+
+/**
+ * Get a random status for mock data
+ * @returns {string} - Random status
+ */
+function getRandomStatus() {
+    const statuses = ['Diajukan', 'Diproses', 'Ditinjau', 'Disetujui', 'Selesai'];
+    const weights = [0.2, 0.2, 0.2, 0.2, 0.2]; // Equal probabilities
+    
+    let random = Math.random();
+    let sum = 0;
+    
+    for (let i = 0; i < statuses.length; i++) {
+        sum += weights[i];
+        if (random < sum) {
+            return statuses[i];
+        }
+    }
+    
+    return statuses[0]; // Default to the first status
 }
 
 /**
