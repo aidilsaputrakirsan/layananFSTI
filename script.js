@@ -1,8 +1,10 @@
-// Ganti URL ini dengan URL Google Apps Script Web App Anda
-const API_URL = 'https://script.google.com/macros/s/AKfycbz5FNB-vzfX-nSR_ZVBWzUDBM0XPJsK5xa8Sj_dtYReSOKezbG_a_Ej48Qt8cYVoWtw/exec';
+// Ganti dengan URL Web App Google Apps Script Anda
+const API_URL = 'https://script.google.com/macros/s/AKfycbxmSBdMW2Pn6r3lEw7zZ6oXtx04m5hIJOXrxxj9YirO9YVngKLCHAgWC5uH6wJk2ovH/exec';
 
 async function fetchData() {
     try {
+        console.log('Fetching data from:', API_URL);
+        
         const response = await fetch(API_URL, {
             method: 'GET',
             mode: 'cors',
@@ -16,9 +18,14 @@ async function fetchData() {
         }
         
         const data = await response.json();
+        console.log('Received data:', data);  // Debug log
         
-        if (!data || !data.headers || !data.rows) {
-            throw new Error('Data format tidak sesuai');
+        // Show loading state
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="100%" class="text-center">Loading data...</td></tr>';
+        
+        // Handle empty or invalid response
+        if (!data) {
+            throw new Error('No data received');
         }
         
         // Clear existing content
@@ -28,33 +35,53 @@ async function fetchData() {
         tableBody.innerHTML = '';
         
         // Populate headers
-        data.headers.forEach(header => {
-            const th = document.createElement('th');
-            th.textContent = header;
-            headerRow.appendChild(th);
-        });
+        if (Array.isArray(data.headers)) {
+            data.headers.forEach(header => {
+                const th = document.createElement('th');
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+        } else {
+            throw new Error('Headers not found in response');
+        }
         
         // Populate data
-        data.rows.forEach(row => {
-            const tr = document.createElement('tr');
-            row.forEach(cell => {
-                const td = document.createElement('td');
-                // Format date if cell looks like a date string
-                if (typeof cell === 'string' && cell.match(/^\d{4}-\d{2}-\d{2}/)) {
-                    td.textContent = new Date(cell).toLocaleDateString('id-ID');
-                } else {
-                    td.textContent = cell || '';
-                }
-                tr.appendChild(td);
+        if (Array.isArray(data.rows)) {
+            data.rows.forEach(row => {
+                const tr = document.createElement('tr');
+                row.forEach(cell => {
+                    const td = document.createElement('td');
+                    // Handle date formatting
+                    if (typeof cell === 'string' && cell.match(/^\d{4}-\d{2}-\d{2}/)) {
+                        const date = new Date(cell);
+                        td.textContent = date.toLocaleDateString('id-ID');
+                    } else {
+                        td.textContent = cell || '';
+                    }
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
             });
-            tableBody.appendChild(tr);
-        });
+        } else {
+            throw new Error('No rows found in response');
+        }
+        
+        // Add timestamp
+        const timestamp = document.createElement('div');
+        timestamp.className = 'text-muted small mt-2';
+        timestamp.textContent = `Last updated: ${new Date().toLocaleString('id-ID')}`;
+        document.querySelector('.card-body').appendChild(timestamp);
+        
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error:', error);  // Debug log
         document.getElementById('tableBody').innerHTML = `
             <tr>
                 <td colspan="100%" class="text-center text-danger">
-                    Error: ${error.message}
+                    <div class="alert alert-danger">
+                        Error: ${error.message}
+                        <br>
+                        <small>Please check the console for more details.</small>
+                    </div>
                 </td>
             </tr>
         `;
@@ -63,3 +90,12 @@ async function fetchData() {
 
 // Load data when page loads
 document.addEventListener('DOMContentLoaded', fetchData);
+
+// Add refresh button if needed
+document.addEventListener('DOMContentLoaded', () => {
+    const refreshButton = document.createElement('button');
+    refreshButton.className = 'btn btn-primary mb-3';
+    refreshButton.textContent = 'Refresh Data';
+    refreshButton.onclick = fetchData;
+    document.querySelector('.card-body').insertBefore(refreshButton, document.querySelector('.table-responsive'));
+});
