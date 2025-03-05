@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
  * Setup navigation functionality
  */
 function setupNavigation() {
-    // Get all navigation links with data-section attribute
-    const navLinks = document.querySelectorAll('.nav-link[data-section], .dropdown-item[data-section]');
+    // Get all navigation links and buttons with data-section attribute
+    const navLinks = document.querySelectorAll('.nav-link[data-section], .dropdown-item[data-section], .btn[data-section]');
     
     // Add click event to each navigation link
     navLinks.forEach(link => {
