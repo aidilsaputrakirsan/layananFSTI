@@ -1,0 +1,136 @@
+/**
+ * Layanan Administrasi Prima FSTI
+ * 3D Animations CSS
+ */
+
+/* 3D Animation Containers */
+.animation-container {
+    width: 100%;
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(47, 77, 211, 0.15);
+}
+
+/* Hero 3D Animation */
+#hero-3d-container {
+    height: 450px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 244, 255, 0.9) 100%);
+}
+
+/* Document Flow 3D Animation */
+#flow-3d-container {
+    height: 350px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 244, 255, 0.9) 100%);
+}
+
+/* Organization Chart 3D Animation */
+#org-3d-container {
+    height: 500px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(240, 244, 255, 0.9) 100%);
+}
+
+/* Animation Loading State */
+.animation-container::before {
+    content: 'Loading 3D Animation...';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #2f4dd3;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0.7;
+}
+
+.animation-container.loaded::before {
+    display: none;
+}
+
+/* Canvas Element Styling */
+.animation-container canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    outline: none;
+}
+
+/* 3D Info Labels */
+.threejs-label {
+    position: absolute;
+    background-color: rgba(47, 77, 211, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+}
+
+/* Responsive Adjustments for 3D Elements */
+@media (max-width: 991.98px) {
+    .animation-container {
+        height: 350px;
+    }
+    
+    #hero-3d-container {
+        height: 350px;
+    }
+    
+    #org-3d-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .animation-container {
+        height: 300px;
+    }
+    
+    #hero-3d-container {
+        height: 300px;
+    }
+    
+    #flow-3d-container {
+        height: 250px;
+    }
+    
+    #org-3d-container {
+        height: 350px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .animation-container {
+        height: 250px;
+    }
+    
+    #hero-3d-container {
+        height: 250px;
+    }
+    
+    #flow-3d-container {
+        height: 200px;
+    }
+    
+    #org-3d-container {
+        height: 300px;
+    }
+}
+
+/* Performance optimization for mobile */
+@media (max-width: 768px) and (orientation: portrait), (max-width: 1024px) and (orientation: landscape) {
+    /* Add .simple-view class to trigger simpler animations on mobile */
+    .animation-container.simple-view {
+        background-image: url('../img/fallback.png');
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    
+    .animation-container.simple-view canvas {
+        opacity: 0.7;
+    }
+}

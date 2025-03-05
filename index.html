@@ -23,6 +23,7 @@
     
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/3d-animations.css">
 </head>
 <body>
     <!-- Preloader -->
@@ -96,7 +97,8 @@
                         </div>
                         <div class="col-lg-6" data-aos="fade-left" data-aos-delay="400">
                             <div class="hero-image">
-                                <img src="assets/img/hero-illustration.svg" alt="Ilustrasi Layanan FSTI">
+                                <!-- 3D Animation Container -->
+                                <div id="hero-3d-container" class="animation-container"></div>
                             </div>
                         </div>
                     </div>
@@ -154,10 +156,8 @@
                 </div>
                 
                 <div class="org-chart" data-aos="zoom-in">
-                    <!-- Placeholder for organizational structure chart -->
-                    <div class="text-center">
-                        <img src="assets/img/org-chart.svg" alt="Struktur Organisasi FSTI" class="img-fluid">
-                    </div>
+                    <!-- 3D Organizational Chart -->
+                    <div id="org-3d-container" class="animation-container"></div>
                 </div>
                 
                 <div class="row mt-5">
@@ -624,9 +624,8 @@
                 </div>
                 
                 <div class="workflow-container" data-aos="zoom-in">
-                    <div class="text-center mb-5">
-                        <img src="assets/img/workflow-diagram.svg" alt="Alur Kerja Administrasi" class="img-fluid">
-                    </div>
+                    <!-- 3D Flow Animation -->
+                    <div id="flow-3d-container" class="animation-container mb-5"></div>
                     
                     <div class="workflow-steps">
                         <div class="row">
@@ -907,5 +906,6 @@
     
     <!-- Custom JS -->
     <script src="script.js"></script>
+    <script src="assets/js/3d-animations.js"></script>
 </body>
 </html>
