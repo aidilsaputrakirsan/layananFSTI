@@ -1,0 +1,257 @@
+/**
+ * Layanan Administrasi Prima FSTI
+ * Animation Effects CSS
+ */
+
+/* Particles Background Container */
+.particles-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particles-bg canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Floating Elements Container */
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.floating-element {
+    pointer-events: none;
+    position: absolute;
+    transition: transform 0.1s ease-out;
+}
+
+/* Apply these classes to sections that need backgrounds */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.section-with-bg {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Content should be above the background */
+.particles-bg,
+.floating-elements {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.section-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* 3D Card Effects */
+.perspective-card-container {
+    perspective: 1000px;
+}
+
+.card-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.3s ease;
+}
+
+.card-3d:hover {
+    transform: translateY(-10px) rotateX(5deg);
+}
+
+.card-3d-content {
+    transform-style: preserve-3d;
+}
+
+.card-3d-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.card-3d-layer-1 {
+    transform: translateZ(20px);
+}
+
+.card-3d-layer-2 {
+    transform: translateZ(40px);
+}
+
+.card-3d-layer-3 {
+    transform: translateZ(60px);
+}
+
+/* Glowing Effect */
+.glow-on-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+.glow-on-hover::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
+    transform: scale(0);
+    transition: transform 0.5s ease-out;
+    pointer-events: none;
+}
+
+.glow-on-hover:hover::after {
+    transform: scale(1);
+}
+
+/* Parallax Container */
+.parallax-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.parallax-layer {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: transform 0.1s ease-out;
+}
+
+/* Apply fancy hover effects to cards */
+.service-card,
+.team-card,
+.feature-card,
+.prodi-card,
+.system-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.service-card .service-icon,
+.feature-card .icon-box,
+.prodi-card .prodi-icon,
+.system-card .system-logo {
+    transition: transform 0.3s ease;
+    transform: translateZ(20px);
+}
+
+.service-card:hover .service-icon,
+.feature-card:hover .icon-box,
+.prodi-card:hover .prodi-icon,
+.system-card:hover .system-logo {
+    transform: translateZ(30px) scale(1.05);
+}
+
+.service-card h3,
+.feature-card h3,
+.prodi-card h3,
+.system-card h4 {
+    transition: transform 0.3s ease, color 0.3s ease;
+    transform: translateZ(10px);
+}
+
+.service-card:hover h3,
+.feature-card:hover h3,
+.prodi-card:hover h3,
+.system-card:hover h4 {
+    transform: translateZ(20px);
+    color: #2f4dd3;
+}
+
+/* Button effect */
+.btn {
+    overflow: hidden;
+    position: relative;
+}
+
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s, opacity 0.5s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.btn:hover::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+}
+
+/* Hover effect for nav links */
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width 0.3s ease, left 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.nav-link:hover::before {
+    width: 70%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    /* Reduce particle density for better performance on mobile */
+    .particles-bg {
+        opacity: 0.5;
+    }
+    
+    /* Simplify card effects on mobile */
+    .service-card,
+    .team-card,
+    .feature-card,
+    .prodi-card,
+    .system-card {
+        transform: none !important;
+    }
+    
+    .service-card .service-icon,
+    .feature-card .icon-box,
+    .prodi-card .prodi-icon,
+    .system-card .system-logo {
+        transform: none !important;
+    }
+}
